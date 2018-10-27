@@ -48,7 +48,6 @@ class State:
                         self.memory.append([row,col])
                         move = self.recSections([row,col], self.memory, [])
                         moves.append([[row,col], move])
-                        self.memory = self.memory + move
         return moves
 
     def recSections(self, current, memory, move):
@@ -56,23 +55,23 @@ class State:
         if current[0]-1 >= 0:
             if self.data[current[0]][current[1]] == self.data[current[0]-1][current[1]] and [current[0]-1,current[1]] not in self.memory:
                 self.memory.append([current[0]-1, current[1]])
-                move.append([current[0]-1, current[1]])
-                move1 = move + self.recSections([current[0] - 1, current[1]], self.memory, move1)
+                move1 = self.recSections([current[0] - 1, current[1]], self.memory, move1)
+                move1.append([current[0]-1, current[1]])
         if current[0]+1 < self.size:
             if self.data[current[0]][current[1]] == self.data[current[0]+1][current[1]] and [current[0]+1,current[1]] not in self.memory:
                 self.memory.append([current[0]+1, current[1]])
-                move.append([current[0]+1, current[1]])
-                move2 = move + self.recSections([current[0]+1, current[1]], self.memory, move2)
+                move2 = self.recSections([current[0]+1, current[1]], self.memory, move2)
+                move2.append([current[0]+1, current[1]])
         if current[1]-1 >= 0:
             if self.data[current[0]][current[1]] == self.data[current[0]][current[1]-1] and [current[0], current[1]-1] not in self.memory:
                 self.memory.append([current[0], current[1]-1])
-                move.append([current[0], current[1]-1])
-                move3 = move + self.recSections([current[0], current[1]-1], self.memory, move3)
+                move3 = self.recSections([current[0], current[1]-1], self.memory, move3)
+                move3.append([current[0], current[1]-1])
         if current[1]+1 < self.size:
             if self.data[current[0]][current[1]] == self.data[current[0]][current[1]+1] and [current[0], current[1]+1] not in self.memory:
                 self.memory.append([current[0], current[1]+1])
-                move.append([current[0], current[1]+1])
-                move4 = move + self.recSections([current[0], current[1]+1], self.memory, move4)
+                move4 = self.recSections([current[0], current[1]+1], self.memory, move4)
+                move4.append([current[0], current[1]+1])
         return move1 + move2 + move3 + move4
 
 
