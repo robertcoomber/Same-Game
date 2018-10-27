@@ -2,3 +2,8 @@ Team Members:
 James Brock
 James Bertrand
 Robert Coomber
+
+Naming conventions:
+
+lowercase with underscores
+ex: same_game.py
