@@ -2,12 +2,8 @@
     The general template for all implemented search algorithms.
 """
 
-from utils import (
-    is_in, argmin, argmax, argmax_random_tie, probability,
-    weighted_sample_with_replacement, memoize, print_table, DataFile, Stack,
-    FIFOQueue, PriorityQueue, name
-)
-from grid import distance
+import utils
+import grid
 
 from collections import defaultdict
 import math
