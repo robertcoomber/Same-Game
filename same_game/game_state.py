@@ -47,7 +47,7 @@ class State:
                     if [row, col] not in self.memory:
                         self.memory.append([row,col])
                         move = self.recSections([row,col], self.memory, [])
-                        moves.append([[row,col], move])
+                        moves.append([[row,col]] + move)
         return moves
 
     def recSections(self, current, memory, move):
