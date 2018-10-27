@@ -9,7 +9,7 @@ from same_game import searches
 # Max 15x15 for the size
 # Max 5 colors: Red Orange Yellow Green Blue
 
-class State()
+class State:
 
     def __init__(self, name, size, colors, data=np.zeros([1,1])):
         self.name = name #String to represent state
@@ -26,30 +26,31 @@ class State()
     #     self.data = data
 
     def setup(self):
-        ran = random.seed(a=None)
-        ran.randint(0, self.colors)
         matrix = np.empty([self.size,self.size])
         for row in range(self.size):
             for col in range(self.size):
-                matrix[row][col] = ran.randint(1,self.colors+1)
+                matrix[row][col] = random.randint(1,self.colors+1)
         return matrix
 
     def getColor(self, x, y):
-        if (x < 15):
-            if (y < 15):
+        if x < 15:
+            if y < 15:
                 return self.data[x][y]
 
-    def sections(self):
-        for row in range(self.size):
-            for col in range(self.size):
-
-
-
-    def remove(self):
-
-
-
-
-class Square()
-
-    def __init__(self, ):
+#     def sections(self):
+#         last = 0
+#         for row in range(self.size):
+#             for col in range(self.size):
+#                 if self.data[row,col] == 0:
+#                     last = 0;
+#                 else
+#
+#
+#     def remove(self):
+#
+#
+#
+#
+# class Square()
+#
+#     def __init__(self, ):
