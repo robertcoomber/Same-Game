@@ -6,8 +6,8 @@ from same_game import searches
 # This module will store information on each iteration of the game,
 # and be able to return modifications of the state
 
-# Max 15x15 for the size
-# Max 5 colors: Red Orange Yellow Green Blue
+# Max 15x15 for the size---not really you can make it as big as you want currently
+# Max 5 colors: Red Orange Yellow Green Blue---not really you can make as many colors as you want
 
 class State:
 
@@ -34,8 +34,8 @@ class State:
         return matrix
 
     def getColor(self, x, y):
-        if x < 15:
-            if y < 15:
+        if x < self.size:
+            if y < self.size:
                 return self.data[x][y]
 
     def sections(self):
