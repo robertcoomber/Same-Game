@@ -15,10 +15,10 @@ class State:
         self.name = name  # String to represent state
         self.size = size  # Int between 1-15 for the length and width
         self.colors = colors  # Int between 1-5 picking the number of colors
-        self.data = data # 2D numpy array using int x, y, and value for color
-        if self.data is None: # if no initial array is passed in, it will generate it's own
-            data = self.setup()
-        self.data = data
+        if data is None: # if no initial array is passed in, it will generate it's own
+            self.data = self.setup()
+        else:
+            self.data = data  # 2D numpy array using int x, y, and value for color
         self.memory = [] # an array of coordinates (each coordinate is an array of two ints)
                          # that stores the values that have been visited by the sections function
 
