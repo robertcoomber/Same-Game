@@ -11,11 +11,12 @@ from same_game import searches
 
 class State:
 
-    def __init__(self, name, size, colors, data=np.zeros([1,1])):
+    def __init__(self, name, size, colors, data=None):
         self.name = name  # String to represent state
         self.size = size  # Int between 1-15 for the length and width
         self.colors = colors  # Int between 1-5 picking the number of colors
-        if np.array_equal(data, np.zeros([1,1])):
+        self.data = data
+        if self.data is None:
             data = self.setup()
         self.data = data
         self.memory = []
