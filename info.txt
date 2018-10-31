@@ -1,9 +1,24 @@
 Team Members:
+
 James Brock
 James Bertrand
 Robert Coomber
+
 
 Naming conventions:
 
 lowercase with underscores
 ex: same_game.py
+
+
+VM Library Requirements:
+
+numpy
+utils
+grid
+
+
+Current State of Project:
+
+The State class is defined in the game_state.py file, which records and can relay information about the state.
+Running the tests.py file will demonstrate the ability of the State class currently.
