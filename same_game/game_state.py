@@ -50,7 +50,7 @@ class State:
         moves = [] # creates a list to add the arrays of coordinates to
         for row in range(self.size): # for every row (x coordinate)
             for col in range(self.size): # for every column (y coordinate)
-                if self.data[row, col] != 0: # if the current coordinate is not 0 (empty)
+                if self.data[row][col] != 0: # if the current coordinate is not 0 (empty)
                     if [row, col] not in self.memory: # and if the current coordinate is not in the memory
                         self.memory.append([row,col]) # add the coordinate to memory
                         move = self.recSections([row,col], []) # call recursive function to check coordinates around the current for matches
@@ -85,12 +85,28 @@ class State:
                 move4.append([current[0], current[1]+1])
         return move1 + move2 + move3 + move4 # combine the different branches into one list
 
+    # will remove all of the squares from the coordinates passed in, and will move the rest of the squares down and to the left to fill in the space
+    # parameters: move - array of coordinates
+    # modifies the current state, doesnt return anything
+    def remove(self, move):
+        for i in range(len(move)):
+            self.data[move[i][0], move[i][1]] = 0;
+        for i in range(self.size):
+            for col in range(self.size): #pushes everything down starting from bottom and moving up
+                for row in range(self.size-1):
+                    if self.data[(self.size - row - 1), col] == 0:
+                        self.data[(self.size - row - 1), col] = self.data[(self.size - row - 2), col]
+                        self.data[(self.size - row - 2), col] = 0;
+        for i in range(self.size):
+            for col in range(self.size-1):
+                count = 0
+                for row in range(self.size):
+                    count += self.data[row, col]
+                if count == 0:
+                    for row in range(self.size):
+                        self.data[row, col] = self.data[row,col+1]
+                        self.data[row, col + 1] = 0;
 
-#     def remove(self):
-#
-#
-#
-#
-# class Square()
-#
-#     def __init__(self, ):
+    # returns number of squares connected within a move (a move is a list of coordinates)
+    def count(self, move):
+        return len(move)
