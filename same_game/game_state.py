@@ -110,3 +110,10 @@ class State:
     # returns number of squares connected within a move (a move is a list of coordinates)
     def count(self, move):
         return len(move)
+
+    # Checks to see if the board is empty, returning true if it is, false otherwise
+    def isEmpty(self):
+        if np.count_nonzero(self.data) == 0:
+            return True
+        else:
+            return False
