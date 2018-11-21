@@ -6,7 +6,7 @@ import same_game.game_state as game_state
 class Agent(searches.Problem):
 
     # Initialize the agent, passing in an initial game state object and goal state
-    def init(self, initial, goal):
+    def init(self, initial, goal=None):
         self.initial = initial
         self.goal = goal
 
