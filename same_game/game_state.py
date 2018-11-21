@@ -42,6 +42,28 @@ class State:
             if y < self.size:
                 return self.data[x][y]
 
+    # returns a list of valid moves
+    def moves(self):
+        moves = self.sections()
+        toRemove = []
+        count = 0
+        for i in moves:
+            if len(moves[count]) < 2:
+                toRemove.append(i)
+            count = count +1
+        for i in toRemove:
+            moves.remove(i)
+            #print(i)
+
+        return moves
+
+    # returns true if there are moves left, will return false if there isnt
+    def movesLeft(self):
+        moves = self.moves()
+        if moves == []:
+            return False
+        return True
+
     # creates a list of possible sections to select for removal
     # returns a list of arrays of coordinates that have the same color value and are touching
     # list layout: [ [[x,y],[x,y]], [[x,y],[x,y],[x,y]], ... ]

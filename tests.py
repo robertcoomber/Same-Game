@@ -1,14 +1,18 @@
 from same_game import game_state as state
 
-testArray = state.State("testArray", 10, 2)
+testArray = state.State("testArray", 10, 4)
 print("The generated board:")
 print(testArray.data)
-print("Possible moves:")
+print("All Sections:")
 print(testArray.sections())
-print("The amount of blocks removed for every action:")
-for i in range(2): # THIS WILL RESULT IN ERROR IF THE NUMBER IS TOO HIGH, BECAUSE IT DOESNT CHECK TO SEE IF THERE ARE NO MOVES LEFT
-    print(testArray.count(testArray.sections()[0]))
-    testArray.remove(testArray.sections()[0])
+print("Valid Moves:")
+print(testArray.moves())
+print("The moves left and amount of blocks removed for every action:")
+for i in range(20):
+    if testArray.isEmpty() == False and testArray.movesLeft():
+        print(testArray.moves())
+        print(testArray.count(testArray.moves()[0]))
+        testArray.remove(testArray.moves()[0])
 print("Final:")
 print(testArray.data)
 print('Is the board empty?')
