@@ -9,7 +9,7 @@ def agentOnlyMetrics(boards):
     print('-----------------------------------------------')
     for board in boards:
         ag = agent.Agent(board)
-    print('Starting board:\n', board.data)
-    searches.breadth_first_tree_search(ag)
-    print('Final board:\n', board.data)
+        print('Starting board:\n', board.data, '\n')
+        searches.breadth_first_search(ag)
+        print('Final board:\n', board.data, '\n')
 

@@ -13,7 +13,7 @@ class Agent(searches.Problem):
     # returns a list of actions on the state
     # state --> a game_state object
     def actions(self, state):
-        moves = state.sections()
+        moves = state.moves()
         return moves
 
     # performs the remove() function on the state, given the action selected from the returned array of moves
@@ -24,4 +24,8 @@ class Agent(searches.Problem):
     # calls the isEmpty() method on the state to determine if all squares have been removed from the board
     def goal_test(self, state):
         empty = state.isEmpty()
+        movesLeft = state.movesLeft()
+        # Boolean value that will be true only if the board is empty and there
+        # are no moves left. (Trying to fix issue of board terminating in non goal state.)
+        goalState = (empty and not movesLeft)
         return empty

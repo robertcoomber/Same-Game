@@ -22,8 +22,10 @@ def test_game_state():
 
 def test_controller():
     testBoards = [
-        state.State("Test1", 5, 3)
+        state.State("Test1", 5, 3),
+        state.State("Test2", 7, 4),
     ]
+
     controller.agentOnlyMetrics(testBoards)
 
 
