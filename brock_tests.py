@@ -22,13 +22,13 @@ def test_game_state():
 
 def test_controller():
     testBoards = [
-        state.State("Test1", 4, 2),
-        # state.State("Test2", 7, 3),
+        state.State("Test1", 10, 4),
+        state.State("Test2", 7, 3),
     ]
 
     controller.agentOnlyMetrics(testBoards)
 
 
 # Call functions here to run specific tests
-test_game_state()
+# test_game_state()
 test_controller()
