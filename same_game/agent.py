@@ -23,9 +23,6 @@ class Agent(searches.Problem):
 
     # calls the isEmpty() method on the state to determine if all squares have been removed from the board
     def goal_test(self, state):
-        empty = state.isEmpty()
         movesLeft = state.movesLeft()
-        # Boolean value that will be true only if the board is empty and there
-        # are no moves left. (Trying to fix issue of board terminating in non goal state.)
-        goalState = (empty and not movesLeft)
-        return empty
+        movesLeft = not movesLeft
+        return movesLeft

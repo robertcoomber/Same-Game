@@ -30,5 +30,5 @@ def test_controller():
 
 
 # Call functions here to run specific tests
-test_game_state()
+# test_game_state()
 test_controller()
