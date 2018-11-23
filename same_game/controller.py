@@ -48,8 +48,11 @@ def agentOnlyMetrics(boards):
         boardCopy = deepcopy(board)
         ag = agent.Agent(board)
         ag2 = agent.Agent(boardCopy)
+
         print('Starting board:\n', board.data, '\n')
+        metrics.startTime(board.__repr__())
         breadth_result = searches.breadth_first_tree_search(ag)
+        metrics.getTime(board.__repr__())
         print('Final board (breadth first):\n', breadth_result.state.data, '\n')
         breadth_path = breadth_result.path()
         breadth_moves = []
@@ -64,7 +67,11 @@ def agentOnlyMetrics(boards):
         print('\nTotal score:', breadth_result.state.score, '\n')
         print('Depth of solution:', breadth_result.depth, '\n')
         print('Number of nodes explored:', ag.nodesExplored, '\n')
+
+        print('Starting board:\n', boardCopy.data, '\n')
+        metrics.startTime(boardCopy.__repr__())
         depth_result = searches.depth_first_tree_search(ag2)
+        metrics.getTime(boardCopy.__repr__())
         print('Final board (depth first):\n', depth_result.state.data, '\n')
         depth_path = depth_result.path()
         depth_moves = []
