@@ -22,7 +22,7 @@ def test_game_state():
 
 def test_controller():
     testBoards = [
-        state.State("Test1", 5, 2),
+        state.State("Test1", 5, 3),
         # state.State("Test2", 7, 3),
         # state.State("Test3", 15, 6),
     ]
@@ -31,5 +31,6 @@ def test_controller():
 
 
 # Call functions here to run specific tests
-test_game_state()
-test_controller()
+if __name__ == '__main__':
+    test_game_state()
+    test_controller()
