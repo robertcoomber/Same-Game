@@ -7,9 +7,10 @@ from copy import deepcopy
 class Agent(searches.Problem):
 
     # Initialize the agent, passing in an initial game state object and goal state
-    def init(self, initial, goal=None):
+    def __init__(self, initial, goal=None):
         self.initial = initial
         self.goal = goal
+        self.movesList = []
 
     # returns a list of actions on the state
     # state --> a game_state object
@@ -19,11 +20,11 @@ class Agent(searches.Problem):
 
     # performs the remove() function on the state, given the action selected from the returned array of moves
     def result(self, state, action):
-        state1 = deepcopy(state)
-        state1.remove(action)
-        return state1
+        state.remove(action)
+        self.movesList.append(action)
+        return state
 
-    # calls the isEmpty() method on the state to determine if all squares have been removed from the board
+    # calls the movesLeft() method on the state to determine if no possible moves are remaining
     def goal_test(self, state):
         movesLeft = state.movesLeft()
         movesLeft = not movesLeft
