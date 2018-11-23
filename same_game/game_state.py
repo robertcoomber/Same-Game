@@ -15,6 +15,7 @@ class State:
         self.name = name  # String to represent state
         self.size = size  # Int between 1-15 for the length and width
         self.colors = colors  # Int between 1-5 picking the number of colors
+        self.score = 0  # Keeps track of score for the board
         if data is None: # if no initial array is passed in, it will generate it's own
             self.data = self.setup()
         else:
@@ -111,6 +112,10 @@ class State:
     # parameters: move - array of coordinates
     # modifies the current state, doesnt return anything
     def remove(self, move):
+        moveScore = self.count(move)    # get the score for the move
+        self.score += ((moveScore - 2) ** 2)        # add it to the total score
+
+
         for i in range(len(move)):
             self.data[move[i][0], move[i][1]] = 0
         for i in range(self.size):
