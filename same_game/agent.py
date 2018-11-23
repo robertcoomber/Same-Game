@@ -25,8 +25,4 @@ class Agent(searches.Problem):
     def goal_test(self, state):
         movesLeft = state.movesLeft()
         movesLeft = not movesLeft
-<<<<<<< HEAD
         return movesLeft
-=======
-        return movesLeft
->>>>>>> upstream/master

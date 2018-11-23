@@ -3,10 +3,7 @@
 
 from same_game import agent, game_state, searches
 from copy import deepcopy
-<<<<<<< HEAD
-=======
 
->>>>>>> upstream/master
 
 # runs search algorithms on a list of boards, reporting the metrics for each
 def agentOnlyMetrics(boards):
@@ -16,10 +13,6 @@ def agentOnlyMetrics(boards):
         ag = agent.Agent(board)
         print('Starting board:\n', board.data, '\n')
         searches.breadth_first_tree_search(ag)
-<<<<<<< HEAD
-=======
-        board.moves()
->>>>>>> upstream/master
         print('Final board:\n', board.data, '\n')
 
 

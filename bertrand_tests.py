@@ -22,13 +22,10 @@ def test_game_state():
 
 def test_controller():
     testBoards = [
-<<<<<<< HEAD:tests.py
         state.State("Test1", 4, 2),
         # state.State("Test2", 7, 3),
-=======
         state.State("Test1", 10, 4),
         state.State("Test2", 7, 3),
->>>>>>> upstream/master:bertrand_tests.py
     ]
 
     controller.agentOnlyMetrics(testBoards)
