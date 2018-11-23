@@ -49,22 +49,22 @@ def agentOnlyMetrics(boards):
         ag = agent.Agent(board)
         ag2 = agent.Agent(boardCopy)
         print('Starting board:\n', board.data, '\n')
-        searches.breadth_first_tree_search(ag)
-        print('Final board (breadth first):\n', board.data, '\n')
+        breadth_result = searches.breadth_first_tree_search(ag)
+        print('Final board (breadth first):\n', breadth_result.state.data, '\n')
         print('Moves:')
         count = 1
         for move in ag.movesList:
             print(count, ': ', move)
             count += 1
-        print('Total score:', board.score, '\n')
-        searches.depth_first_tree_search(ag2)
-        print('Final board (depth first):\n', boardCopy.data, '\n')
+        print('Total score:', breadth_result.state.score, '\n')
+        depth_result = searches.depth_first_tree_search(ag2)
+        print('Final board (depth first):\n', depth_result.state.data, '\n')
         print('Moves:')
         count = 1
         for move in ag2.movesList:
             print(count, ': ', move)
             count += 1
-        print('Total score:', boardCopy.score, '\n')
+        print('Total score:', depth_result.state.score, '\n')
 
 
 if __name__ == '__main__':
