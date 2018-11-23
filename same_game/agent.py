@@ -20,9 +20,11 @@ class Agent(searches.Problem):
 
     # performs the remove() function on the state, given the action selected from the returned array of moves
     def result(self, state, action):
-        state.remove(action)
+        newState = deepcopy(state)
+        newState.remove(action)
         self.movesList.append(action)
-        return state
+        # print('checking moves...\n')
+        return newState
 
     # calls the movesLeft() method on the state to determine if no possible moves are remaining
     def goal_test(self, state):
