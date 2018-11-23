@@ -2,6 +2,7 @@
 
 import same_game.searches as searches
 import same_game.game_state as game_state
+from copy import deepcopy
 
 class Agent(searches.Problem):
 
@@ -18,8 +19,9 @@ class Agent(searches.Problem):
 
     # performs the remove() function on the state, given the action selected from the returned array of moves
     def result(self, state, action):
-        state.remove(action)
-        return state
+        state1 = deepcopy(state)
+        state1.remove(action)
+        return state1
 
     # calls the isEmpty() method on the state to determine if all squares have been removed from the board
     def goal_test(self, state):

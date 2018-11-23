@@ -13,7 +13,6 @@ def agentOnlyMetrics(boards):
         ag = agent.Agent(board)
         print('Starting board:\n', board.data, '\n')
         searches.breadth_first_tree_search(ag)
-        board.moves()
         print('Final board:\n', board.data, '\n')
 
 
