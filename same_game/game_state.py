@@ -139,3 +139,41 @@ class State:
             return True
         else:
             return False
+
+    # will return the frequency of each color in the table, with each number correlating to the position
+    # in the array returned
+    def amounts(self):
+        l = []
+        for i in range(self.colors+1):
+            l.append(0)
+        for row in range(self.size):
+            for col in range(self.size):
+                l[int(self.data[row][col])] = l[int(self.data[row][col])] + 1
+        return l
+
+    # returns the number that has the highest frequency (excluding 0)
+    def highest(self):
+        l = self.amounts()
+        highest = 1
+        for i in range(len(l)-2):
+            if l[i + 1] < l[i + 2]:
+                highest = i+2
+        return highest
+
+    # will change the specified amount of tiles randomly to the color that is most frequent
+    def changeATile(self, amount):
+        highest = self.highest()
+        l = self.amounts()
+        #print(highest)
+        for i in range(amount):
+            go = True
+            while go:
+                x = random.randint(0,self.size-1)
+                y = random.randint(0,self.size-1)
+                if self.data[x,y] != highest and self.data[x,y] != 0 and l[int(self.data[x,y])] != 0:
+                    self.data[x,y] = highest
+                    go = False
+
+
+
+
