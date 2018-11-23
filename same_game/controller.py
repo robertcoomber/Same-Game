@@ -6,32 +6,34 @@ from copy import deepcopy
 
 def agentVSPlayer():
     while True:
-        print("Welcome to the Same Game. We want to die and you might too.")
-        print("Pick a mode: 1) Play  2) Watch")
-        x = input()
-        print("Too bad you are going to play anyways.")
-        name = input("What is your name?")
-        size = int(input("How big do you want it C=3"))
-        colors = int(input("How colorful do u want it yaaaas"))
+        print("Welcome to the Same Game!")
+        print("The goal of this game is to remove as many color groupings of 2 or more tiles as possible.")
+        print("The bigger the group you remove, the more points you score! Try to score as high as you can.")
+        print("")
+        name = input("What is your name? ")
+        size = int(input("What size board would you like to play on? (enter a single number. i.e. 5 = a 5x5 board) "))
+        colors = int(input("How many different colors would you like? (Recommended 3 or more) "))
         board = game_state.State(name, size, colors)
         board2 = deepcopy(board)
         while board.movesLeft():
             metrics.playerMoves += 1
             print("Move", metrics.playerMoves)
-            print(board.data)
+            print(board.data, '\n')
+            print('Current Score:', board.score, '\n')
             print("Moves:")
             for i in range(len(board.moves())):
                 print(i, ")", board.moves()[i])
-            x = int(input("Your move:"))
+            x = int(input("\nYour move: "))
             board.remove(board.moves()[x])
         print("Final Board:")
         print(board.data)
-        print
+        print()
         print("Now lets see how the agent did...")
         ag = agent.Agent(board2)
         searches.breadth_first_tree_search(ag)
         print('Final board:\n', board2.data, '\n')
-        if(input("type y to end, anyhthing else to continue") == 'y'):
+        print('Agent Scored:', board2.score, '\n')
+        if(input("Play again? (y/n) ") == 'n'):
             break
 
 
@@ -43,13 +45,37 @@ def agentOnlyMetrics(boards):
     print('Agent metrics on set of input same-game boards:')
     print('-----------------------------------------------')
     for board in boards:
+        boardCopy = deepcopy(board)
         ag = agent.Agent(board)
+        ag2 = agent.Agent(boardCopy)
         print('Starting board:\n', board.data, '\n')
         searches.breadth_first_tree_search(ag)
-        print('Final board:\n', board.data, '\n')
+        print('Final board (breadth first):\n', board.data, '\n')
+        print('Moves:')
+        count = 1
+        for move in ag.movesList:
+            print(count, ': ', move)
+            count += 1
+        print('Total score:', board.score, '\n')
+        searches.depth_first_tree_search(ag2)
+        print('Final board (depth first):\n', boardCopy.data, '\n')
+        print('Moves:')
+        count = 1
+        for move in ag2.movesList:
+            print(count, ': ', move)
+            count += 1
+        print('Total score:', boardCopy.score, '\n')
 
 
-agentVSPlayer()
+if __name__ == '__main__':
+    agentVSPlayer()
+
+
+
+
+
+
+
 
 # runs search algorithms on a list of boards, reporting the metrics for each
 # def agentOnlyMetrics(boards):
