@@ -2,6 +2,7 @@
 # Utilizes the game_state object and agent object
 
 from same_game import agent, game_state, searches
+from copy import deepcopy
 
 # runs search algorithms on a list of boards, reporting the metrics for each
 def agentOnlyMetrics(boards):

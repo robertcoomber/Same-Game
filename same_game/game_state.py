@@ -118,7 +118,7 @@ class State:
                 for row in range(self.size-1):
                     if self.data[(self.size - row - 1), col] == 0:
                         self.data[(self.size - row - 1), col] = self.data[(self.size - row - 2), col]
-                        self.data[(self.size - row - 2), col] = 0;
+                        self.data[(self.size - row - 2), col] = 0
         for i in range(self.size):
             for col in range(self.size-1):
                 count = 0
