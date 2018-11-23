@@ -51,20 +51,34 @@ def agentOnlyMetrics(boards):
         print('Starting board:\n', board.data, '\n')
         breadth_result = searches.breadth_first_tree_search(ag)
         print('Final board (breadth first):\n', breadth_result.state.data, '\n')
+        breadth_path = breadth_result.path()
+        breadth_moves = []
+        for node in breadth_path:
+            if node.action:
+                breadth_moves.append(node.action)
         print('Moves:')
         count = 1
-        for move in ag.movesList:
+        for move in breadth_moves:
             print(count, ': ', move)
             count += 1
-        print('Total score:', breadth_result.state.score, '\n')
+        print('\nTotal score:', breadth_result.state.score, '\n')
+        print('Depth of solution:', breadth_result.depth, '\n')
+        print('Number of nodes explored:', ag.nodesExplored, '\n')
         depth_result = searches.depth_first_tree_search(ag2)
         print('Final board (depth first):\n', depth_result.state.data, '\n')
+        depth_path = depth_result.path()
+        depth_moves = []
+        for node in depth_path:
+            if node.action:
+                depth_moves.append(node.action)
         print('Moves:')
         count = 1
-        for move in ag2.movesList:
+        for move in depth_moves:
             print(count, ': ', move)
             count += 1
-        print('Total score:', depth_result.state.score, '\n')
+        print('\nTotal score:', depth_result.state.score, '\n')
+        print('Depth of solution:', depth_result.depth, '\n')
+        print('Number of nodes explored:', ag2.nodesExplored, '\n')
 
 
 if __name__ == '__main__':

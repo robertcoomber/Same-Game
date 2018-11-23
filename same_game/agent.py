@@ -11,6 +11,7 @@ class Agent(searches.Problem):
         self.initial = initial
         self.goal = goal
         self.movesList = []
+        self.nodesExplored = 1
 
     # returns a list of actions on the state
     # state --> a game_state object
@@ -23,7 +24,7 @@ class Agent(searches.Problem):
         newState = deepcopy(state)
         newState.remove(action)
         self.movesList.append(action)
-        # print('checking moves...\n')
+        self.nodesExplored += 1
         return newState
 
     # calls the movesLeft() method on the state to determine if no possible moves are remaining

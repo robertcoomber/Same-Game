@@ -388,27 +388,3 @@ class InstrumentedProblem(Problem):
     def __repr__(self):
         return '<%4d/%4d/%4d/%s>' % (self.succs, self.goal_tests,
                                      self.states, str(self.found)[:4])
-
-
-def compare_searchers(problems, header,
-                      searchers=[breadth_first_tree_search,
-                                 breadth_first_search,
-                                 depth_first_graph_search,
-                                 iterative_deepening_search,
-                                 depth_limited_search,
-                                 recursive_best_first_search]):
-    def do(searcher, problem):
-        p = InstrumentedProblem(problem)
-        searcher(p)
-        return p
-    table = [[name(s)] + [do(s, p) for p in problems] for s in searchers]
-    print_table(table, header)
-
-
-def compare_graph_searchers():
-    """Prints a table of search results."""
-    compare_searchers(problems=[GraphProblem('Arad', 'Bucharest', romania_map),
-                                GraphProblem('Oradea', 'Neamt', romania_map),
-                                GraphProblem('Q', 'WA', australia_map)],
-                      header=['Searcher', 'romania_map(Arad, Bucharest)',
-                              'romania_map(Oradea, Neamt)', 'australia_map'])
