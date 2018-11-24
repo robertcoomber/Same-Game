@@ -2,6 +2,7 @@ import time
 
 playerScore = 0
 playerMoves = 0
+playerTime = 0
 agentScore = 0
 agentMoves = 0
 

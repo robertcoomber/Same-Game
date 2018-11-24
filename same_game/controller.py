@@ -4,6 +4,9 @@
 from same_game import agent, game_state, searches, metrics
 from copy import deepcopy
 
+# pass in the reference (typically the board being searched on) and it will retreive the metric data from that
+# specific board memory location
+# prints out all the data from the specified test
 def displayMetrics(reference):
     metric = metrics.getMetrics(reference.__repr__())
     moves = metric[0]
@@ -22,13 +25,19 @@ def displayMetrics(reference):
     print('Number of nodes explored:', nodes)
     print('Seconds taken:', time)
 
-def runSearch(reference, board):
+# will run the search and store metrics based on the memory location of the board
+# parameters: search - a string that represents the search type ex: depth or breadth
+#             board - the board to be searched
+# it also prints the begining and end board
+def runSearch(search, board):
     ag = agent.Agent(board)
-    print('Starting board (', reference, '):\n', board.data)
+    print()
+    print(search.upper(), "===========================")
+    print('Starting board (', search, '):\n', board.data)
     metrics.startTime(board.__repr__())
-    if reference == "depth":
+    if search == "depth":
         result = searches.depth_first_tree_search(ag)
-    if reference == "breadth":
+    if search == "breadth":
         result = searches.breadth_first_tree_search(ag)
     time = metrics.getTime(board.__repr__())
     path = result.path()
@@ -38,42 +47,48 @@ def runSearch(reference, board):
             moves.append(node.action)
     metrics.setMetrics(board.__repr__(), moves, result.state.score, result.depth, ag.nodesExplored, time)
     metrics.agentScore = result.state.score
-    print('Final board (', reference, '):\n', result.state.data)
+    print('Final board (', search, '):\n', result.state.data)
 
+# runs the block of code where the player searches the board
+# parameters: board - the board for the player to search in
+def playerInput(board):
+    while board.movesLeft():
+        metrics.playerMoves += 1
+        print("Move", metrics.playerMoves)
+        print(board.data)
+        print('Current Score:', board.score)
+        print("Choose a move #:")
+        for i in range(len(board.moves())):
+            print(i, ")", board.moves()[i])
+        x = int(input("Your move: "))
+        board.remove(board.moves()[x])
+    metrics.playerScore = board.score
+    print("Final Board:")
+    print(board.data)
 
-
+# the mode where the player can play against a search algorithm of choice
 def agentVSPlayer():
+    print("Welcome to the Same Game!")
+    print("The goal of this game is to remove as many color groupings of 2 or more tiles as possible.")
+    print("The bigger the group you remove, the more points you score! Try to score as high as you can.")
+    print
     while True:
-        print("Welcome to the Same Game!")
-        print("The goal of this game is to remove as many color groupings of 2 or more tiles as possible.")
-        print("The bigger the group you remove, the more points you score! Try to score as high as you can.")
-        print("")
         name = input("What is your name? ")
         size = int(input("What size board would you like to play on? (enter a single number. i.e. 5 = a 5x5 board) "))
         colors = int(input("How many different colors would you like? (Recommended 2 or more) "))
+        board = game_state.State(name, size, colors)
+        boardCopy = deepcopy(board)
+        metrics.startTime("player")
+        playerInput(board)
+        metrics.playerTime = metrics.getTime("player")
+        print("You took", metrics.playerTime, "seconds!")
+        print()
         search = ""
         while search != "breadth" and search != "depth":
             search = input("What search would you like? (breadth or depth)")
-        boardp = game_state.State(name, size, colors)
-        boarda = deepcopy(boardp)
-        while boardp.movesLeft():
-            metrics.playerMoves += 1
-            print("Move", metrics.playerMoves)
-            print(boardp.data)
-            print('Current Score:', boardp.score)
-            print("Choose a move #:")
-            for i in range(len(boardp.moves())):
-                print(i, ")", boardp.moves()[i])
-            x = int(input("Your move: "))
-            boardp.remove(boardp.moves()[x])
-        metrics.playerScore = boardp.score
-        print("Final Board:")
-        print(boardp.data)
-        print()
         print("Now lets see how the agent did...")
-        print(search, "===============================")
-        runSearch(search, boarda)
-        displayMetrics(boarda)
+        runSearch(search, boardCopy)
+        displayMetrics(boardCopy)
         print
         print("You scored:", metrics.playerScore)
         print("Agent scored:", metrics.agentScore)
@@ -91,8 +106,8 @@ def agentVSPlayer():
 def agentOnlyMetrics(boards):
     print('Agent metrics on set of input same-game boards:')
     print('-----------------------------------------------')
-    for board in boards:
-        for s in metrics.searches:
+    for board in boards: # for every board passed in
+        for s in metrics.searches: # for every search defined in the metrics.py file
             boardCopy = deepcopy(board)
             runSearch(s, boardCopy)
             displayMetrics(boardCopy)
