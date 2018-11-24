@@ -7,6 +7,9 @@ agentMoves = 0
 
 # dictionary of clocks
 references = {}
+allMetrics = {}
+
+searches = ['breadth', 'depth']
 
 #pass in a reference so that it can save the specific time to a dicitonary, and then compare it to the end time once the reference is passed in again
 def startTime(reference):
@@ -17,8 +20,13 @@ def getTime(reference):
     elapsed = 0
     if str(reference) in references:
         elapsed = time.time() - references[str(reference)]
-    print("Seconds elapsed:", elapsed)
     return elapsed
+
+def setMetrics(reference, moves, score, depth, nodes, time):
+    allMetrics[str(reference)] = [moves, score, depth, nodes, time]
+
+def getMetrics(reference):
+    return allMetrics[str(reference)]
 
 if __name__ == '__main__':
     startTime("key")

@@ -4,6 +4,44 @@
 from same_game import agent, game_state, searches, metrics
 from copy import deepcopy
 
+def displayMetrics(reference):
+    metric = metrics.getMetrics(reference.__repr__())
+    moves = metric[0]
+    score = metric[1]
+    depth = metric[2]
+    nodes = metric[3]
+    time = metric[4]
+    print('Moves:')
+    count = 1
+    for move in moves:
+        print(count, ': ', move)
+        count += 1
+    print("-----------------------------------------")
+    print('Total score:', score)
+    print('Depth of solution:', depth)
+    print('Number of nodes explored:', nodes)
+    print('Seconds taken:', time)
+
+def runSearch(reference, board):
+    ag = agent.Agent(board)
+    print('Starting board (', reference, '):\n', board.data)
+    metrics.startTime(board.__repr__())
+    if reference == "depth":
+        result = searches.depth_first_tree_search(ag)
+    if reference == "breadth":
+        result = searches.breadth_first_tree_search(ag)
+    time = metrics.getTime(board.__repr__())
+    path = result.path()
+    moves = []
+    for node in path:
+        if node.action:
+            moves.append(node.action)
+    metrics.setMetrics(board.__repr__(), moves, result.state.score, result.depth, ag.nodesExplored, time)
+    metrics.agentScore = result.state.score
+    print('Final board (', reference, '):\n', result.state.data)
+
+
+
 def agentVSPlayer():
     while True:
         print("Welcome to the Same Game!")
@@ -12,93 +50,104 @@ def agentVSPlayer():
         print("")
         name = input("What is your name? ")
         size = int(input("What size board would you like to play on? (enter a single number. i.e. 5 = a 5x5 board) "))
-        colors = int(input("How many different colors would you like? (Recommended 3 or more) "))
-        board = game_state.State(name, size, colors)
-        board2 = deepcopy(board)
-        while board.movesLeft():
+        colors = int(input("How many different colors would you like? (Recommended 2 or more) "))
+        search = ""
+        while search != "breadth" and search != "depth":
+            search = input("What search would you like? (breadth or depth)")
+        boardp = game_state.State(name, size, colors)
+        boarda = deepcopy(boardp)
+        while boardp.movesLeft():
             metrics.playerMoves += 1
             print("Move", metrics.playerMoves)
-            print(board.data, '\n')
-            print('Current Score:', board.score, '\n')
-            print("Moves:")
-            for i in range(len(board.moves())):
-                print(i, ")", board.moves()[i])
-            x = int(input("\nYour move: "))
-            board.remove(board.moves()[x])
+            print(boardp.data)
+            print('Current Score:', boardp.score)
+            print("Choose a move #:")
+            for i in range(len(boardp.moves())):
+                print(i, ")", boardp.moves()[i])
+            x = int(input("Your move: "))
+            boardp.remove(boardp.moves()[x])
+        metrics.playerScore = boardp.score
         print("Final Board:")
-        print(board.data)
+        print(boardp.data)
         print()
         print("Now lets see how the agent did...")
-        ag = agent.Agent(board2)
-        searches.breadth_first_tree_search(ag)
-        print('Final board:\n', board2.data, '\n')
-        print('Agent Scored:', board2.score, '\n')
+        print(search, "===============================")
+        runSearch(search, boarda)
+        displayMetrics(boarda)
+        print
+        print("You scored:", metrics.playerScore)
+        print("Agent scored:", metrics.agentScore)
+        if metrics.playerScore > metrics.agentScore:
+            print("You win!")
+        elif metrics.playerScore == metrics.agentScore:
+            print("You tied!")
+        else:
+            print("You lost!")
+
         if(input("Play again? (y/n) ") == 'n'):
             break
-
-
-
-
 
 # runs search algorithms on a list of boards, reporting the metrics for each
 def agentOnlyMetrics(boards):
     print('Agent metrics on set of input same-game boards:')
     print('-----------------------------------------------')
     for board in boards:
-        boardCopy = deepcopy(board)
-        ag = agent.Agent(board)
-        ag2 = agent.Agent(boardCopy)
-
-        print('Starting board:\n', board.data, '\n')
-        metrics.startTime(board.__repr__())
-        breadth_result = searches.breadth_first_tree_search(ag)
-        metrics.getTime(board.__repr__())
-        print('Final board (breadth first):\n', breadth_result.state.data, '\n')
-        breadth_path = breadth_result.path()
-        breadth_moves = []
-        for node in breadth_path:
-            if node.action:
-                breadth_moves.append(node.action)
-        print('Moves:')
-        count = 1
-        for move in breadth_moves:
-            print(count, ': ', move)
-            count += 1
-        print('\nTotal score:', breadth_result.state.score, '\n')
-        print('Depth of solution:', breadth_result.depth, '\n')
-        print('Number of nodes explored:', ag.nodesExplored, '\n')
-
-        print('Starting board:\n', boardCopy.data, '\n')
-        metrics.startTime(boardCopy.__repr__())
-        depth_result = searches.depth_first_tree_search(ag2)
-        metrics.getTime(boardCopy.__repr__())
-        print('Final board (depth first):\n', depth_result.state.data, '\n')
-        depth_path = depth_result.path()
-        depth_moves = []
-        for node in depth_path:
-            if node.action:
-                depth_moves.append(node.action)
-        print('Moves:')
-        count = 1
-        for move in depth_moves:
-            print(count, ': ', move)
-            count += 1
-        print('\nTotal score:', depth_result.state.score, '\n')
-        print('Depth of solution:', depth_result.depth, '\n')
-        print('Number of nodes explored:', ag2.nodesExplored, '\n')
-
+        for s in metrics.searches:
+            boardCopy = deepcopy(board)
+            runSearch(s, boardCopy)
+            displayMetrics(boardCopy)
 
 if __name__ == '__main__':
     agentVSPlayer()
 
+# # THIS IS OLD ONE THAT ISNT EFFICIENT
+# def agentOnlyMetrics(boards):
+#     print('Agent metrics on set of input same-game boards:')
+#     print('-----------------------------------------------')
+#     for board in boards:
+#         boardCopy = deepcopy(board)
+#         ag = agent.Agent(board)
+#         ag2 = agent.Agent(boardCopy)
+#
+#         print('Starting board:\n', board.data, '\n')
+#         metrics.startTime(board.__repr__())
+#         breadth_result = searches.breadth_first_tree_search(ag)
+#         metrics.getTime(board.__repr__())
+#         print('Final board (breadth first):\n', breadth_result.state.data, '\n')
+#         breadth_path = breadth_result.path()
+#         breadth_moves = []
+#         for node in breadth_path:
+#             if node.action:
+#                 breadth_moves.append(node.action)
+#         print('Moves:')
+#         count = 1
+#         for move in breadth_moves:
+#             print(count, ': ', move)
+#             count += 1
+#         print('\nTotal score:', breadth_result.state.score, '\n')
+#         print('Depth of solution:', breadth_result.depth, '\n')
+#         print('Number of nodes explored:', ag.nodesExplored, '\n')
+#
+#         print('Starting board:\n', boardCopy.data, '\n')
+#         metrics.startTime(boardCopy.__repr__())
+#         depth_result = searches.depth_first_tree_search(ag2)
+#         metrics.getTime(boardCopy.__repr__())
+#         print('Final board (depth first):\n', depth_result.state.data, '\n')
+#         depth_path = depth_result.path()
+#         depth_moves = []
+#         for node in depth_path:
+#             if node.action:
+#                 depth_moves.append(node.action)
+#         print('Moves:')
+#         count = 1
+#         for move in depth_moves:
+#             print(count, ': ', move)
+#             count += 1
+#         print('\nTotal score:', depth_result.state.score, '\n')
+#         print('Depth of solution:', depth_result.depth, '\n')
+#         print('Number of nodes explored:', ag2.nodesExplored, '\n')
 
-
-
-
-
-
-
-# runs search algorithms on a list of boards, reporting the metrics for each
+# THIS IS OLD ONE WITH THE WEIRD CHECK FOR COMPLETENESS
 # def agentOnlyMetrics(boards):
 #     print('Agent metrics on set of input same-game boards:')
 #     print('-----------------------------------------------')
