@@ -22,7 +22,8 @@ def test_game_state():
 
 def test_controller():
     testBoards = [
-        state.State("Test1", 6, 2),
+        state.State("Test1", 7, 2),
+        state.State("Test2", 5, 2),
         #state.State("Test2", 3, 3),
     ]
 

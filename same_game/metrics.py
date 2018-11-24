@@ -9,6 +9,7 @@ agentMoves = 0
 # dictionary of clocks
 references = {}
 allMetrics = {}
+allResults = {}
 
 searches = ['breadth', 'depth', 'flounder', 'greedy']
 
@@ -25,6 +26,16 @@ def getTime(reference):
 
 def setMetrics(reference, moves, score, depth, nodes, time):
     allMetrics[str(reference)] = [moves, score, depth, nodes, time]
+
+# stores the metrics within a dictionary of lists with keys of each search that return a list of results
+def saveResults(search, reference, moves, score, depth, nodes, time):
+    if search in allResults:
+        allResults[search] = allResults[search].append([reference, moves, score, depth, nodes, time])
+    else:
+        allResults[search] = [[reference, moves, score, depth, nodes, time]]
+
+def getResults(search):
+    return allResults[search]
 
 def getMetrics(reference):
     return allMetrics[str(reference)]

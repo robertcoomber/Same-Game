@@ -96,7 +96,7 @@ class Node:
         return "<Node %s>" % (self.state,)
 
     def __lt__(self, node):
-        return self.state < node.state
+        return self.state.score < node.state.score
 
     def expand(self, problem):
         "List the nodes reachable in one step from this node."
@@ -217,7 +217,7 @@ def depth_first_graph_search(problem):
 def greedy_tree_search(problem):
     "Search the nodes with the highest f(n) in the search tree first."
     node = Node(problem.initial)
-    frontier = PriorityNodeQueue(max, node.state.score)
+    frontier = PriorityNodeQueue(max, lambda x: x.state.score)
     frontier.append(node)
     while frontier:
         node = frontier.pop()

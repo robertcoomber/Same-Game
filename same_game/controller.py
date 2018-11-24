@@ -25,6 +25,29 @@ def displayMetrics(reference):
     print('Number of nodes explored:', nodes)
     print('Seconds taken:', time)
 
+def displayAvg(search):
+    print(search.upper(), "AVERAGES:")
+    results = metrics.allResults[search]
+    avgscore = 0
+    avgdepth = 0
+    avgnodes = 0
+    avgtime = 0
+    for i in range(len(results)):
+        if i == 0:
+            avgscore = results[i][2]
+            avgdepth = results[i][3]
+            avgnodes = results[i][4]
+            avgtime = results[i][5]
+        else:
+            avgscore = (results[i][2]+avgscore)/2
+            avgdepth = (results[i][3]+avgscore)/2
+            avgnodes = (results[i][4]+avgscore)/2
+            avgtime = (results[i][5]+avgscore)/2
+    print('Average score:', avgscore)
+    print('Average depth of solution:', avgdepth)
+    print('Average number of nodes explored:', avgnodes)
+    print('Average seconds taken:', avgtime)
+
 # will run the search and store metrics based on the memory location of the board
 # parameters: search - a string that represents the search type ex: depth or breadth
 #             board - the board to be searched
@@ -50,8 +73,11 @@ def runSearch(search, board):
         if node.action:
             moves.append(node.action)
     metrics.setMetrics(board.__repr__(), moves, result.state.score, result.depth, ag.nodesExplored, time)
+    metrics.saveResults(search, board.__repr__(), moves, result.state.score, result.depth, ag.nodesExplored, time)
     metrics.agentScore = result.state.score
     print('Final board (', search, '):\n', result.state.data)
+
+
 
 # runs the block of code where the player searches the board
 # parameters: board - the board for the player to search in
@@ -88,8 +114,8 @@ def agentVSPlayer():
         print("You took", metrics.playerTime, "seconds!")
         print()
         search = ""
-        while search != "breadth" and search != "depth":
-            search = input("What search would you like? (breadth or depth)")
+        while search != "breadth" and search != "depth" and search != "greedy" and search != "flounder":
+            search = input("What search would you like? (breadth, depth, flounder, or greedy)")
         print("Now lets see how the agent did...")
         runSearch(search, boardCopy)
         displayMetrics(boardCopy)
@@ -115,6 +141,8 @@ def agentOnlyMetrics(boards):
             boardCopy = deepcopy(board)
             runSearch(s, boardCopy)
             displayMetrics(boardCopy)
+    # for s in metrics.searches:
+    #     displayAvg(s)
 
 if __name__ == '__main__':
     agentVSPlayer()
