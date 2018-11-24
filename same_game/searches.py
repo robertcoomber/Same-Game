@@ -4,7 +4,7 @@
 from same_game.utils import (
     is_in, argmin, argmax, argmax_random_tie, probability,
     weighted_sample_with_replacement, memoize, print_table, DataFile, Stack,
-    FIFOQueue, PriorityQueue, name
+    FIFOQueue, PriorityQueue, name, PriorityNodeQueue
 )
 from same_game.grid import distance
 
@@ -214,6 +214,18 @@ def depth_first_graph_search(problem):
     "Search the deepest nodes in the search tree first."
     return graph_search(problem, Stack())
 
+def greedy_tree_search(problem):
+    "Search the nodes with the highest f(n) in the search tree first."
+    node = Node(problem.initial)
+    frontier = PriorityNodeQueue(max, node.state.score)
+    frontier.append(node)
+    while frontier:
+        node = frontier.pop()
+        if problem.goal_test(node.state):
+            return node
+        frontier.extend(node.expand(problem))
+    return None
+
 
 def breadth_first_search(problem):
     "[Figure 3.11]"
@@ -297,6 +309,19 @@ def iterative_deepening_search(problem):
         result = depth_limited_search(problem, depth)
         if result != 'cutoff':
             return result
+
+
+def flounder(problem, giveup=10000):
+    'The worst way to solve a problem'
+    node = Node(problem.initial)
+    count = 0
+    while not problem.goal_test(node.state):
+        count += 1
+        if count >= giveup:
+            return None
+        children = node.expand(problem)
+        node = random.choice(children)
+    return node
 
 # ______________________________________________________________________________
 # Informed (Heuristic) Search
