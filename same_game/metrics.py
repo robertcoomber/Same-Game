@@ -10,7 +10,7 @@ agentMoves = 0
 references = {}
 allMetrics = {}
 
-searches = ['breadth', 'depth']
+searches = ['breadth', 'depth', 'flounder', 'greedy']
 
 #pass in a reference so that it can save the specific time to a dicitonary, and then compare it to the end time once the reference is passed in again
 def startTime(reference):

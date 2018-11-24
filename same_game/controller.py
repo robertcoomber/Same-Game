@@ -4,7 +4,7 @@
 from same_game import agent, game_state, searches, metrics
 from copy import deepcopy
 
-# pass in the reference (typically the board being searched on) and it will retreive the metric data from that
+# pass in the reference (typically the board being searched on) and it will retrieve the metric data from that
 # specific board memory location
 # prints out all the data from the specified test
 def displayMetrics(reference):
@@ -28,7 +28,7 @@ def displayMetrics(reference):
 # will run the search and store metrics based on the memory location of the board
 # parameters: search - a string that represents the search type ex: depth or breadth
 #             board - the board to be searched
-# it also prints the begining and end board
+# it also prints the beginning and end board
 def runSearch(search, board):
     ag = agent.Agent(board)
     print()
@@ -37,8 +37,12 @@ def runSearch(search, board):
     metrics.startTime(board.__repr__())
     if search == "depth":
         result = searches.depth_first_tree_search(ag)
-    if search == "breadth":
+    elif search == "breadth":
         result = searches.breadth_first_tree_search(ag)
+    elif search == "flounder":
+        result = searches.flounder(ag)
+    elif search == "greedy":
+        result = searches.greedy_tree_search(ag)
     time = metrics.getTime(board.__repr__())
     path = result.path()
     moves = []
@@ -71,7 +75,7 @@ def agentVSPlayer():
     print("Welcome to the Same Game!")
     print("The goal of this game is to remove as many color groupings of 2 or more tiles as possible.")
     print("The bigger the group you remove, the more points you score! Try to score as high as you can.")
-    print
+    print()
     while True:
         name = input("What is your name? ")
         size = int(input("What size board would you like to play on? (enter a single number. i.e. 5 = a 5x5 board) "))
@@ -89,7 +93,7 @@ def agentVSPlayer():
         print("Now lets see how the agent did...")
         runSearch(search, boardCopy)
         displayMetrics(boardCopy)
-        print
+        print()
         print("You scored:", metrics.playerScore)
         print("Agent scored:", metrics.agentScore)
         if metrics.playerScore > metrics.agentScore:
