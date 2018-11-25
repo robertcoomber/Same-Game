@@ -241,7 +241,8 @@ def greedy_tree_search_move(problem):
     return None
 
 def greedy_tree_search_score_plus_tilesRemaining(problem):
-    "Search the nodes with the highest score minus the number of empty tiles."
+    """Search the nodes with the highest current score plus the number of remaining tiles, valued similarly to
+    the removal scoring function."""
     node = Node(problem.initial)
     frontier = PriorityNodeQueue(max, lambda x: x.state.score + ((x.state.remainingTiles() - 1) ** 2))
     frontier.append(node)
