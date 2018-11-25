@@ -2,7 +2,9 @@
 
 import same_game.searches as searches
 import same_game.game_state as game_state
+import same_game.games as games
 from copy import deepcopy
+
 
 class Agent(searches.Problem):
 
@@ -32,3 +34,28 @@ class Agent(searches.Problem):
         movesLeft = state.movesLeft()
         movesLeft = not movesLeft
         return movesLeft
+
+
+# to play against an opponent where the agent can search to a certain depth for a move, use the game implementation
+class GameAgent(games.Game):
+
+    def __init__(self, initial):
+        self.initial = initial
+
+    def actions(self, state):
+        moves = state.moves()
+        return moves
+
+    def result(self, state, move):
+        newState = deepcopy(state)
+        newState.remove(move)
+        return newState
+
+    def utility(self, state):
+        return state.score
+
+    def terminal_test(self, state):
+        movesLeft = state.movesLeft()
+        movesLeft = not movesLeft
+        return movesLeft
+

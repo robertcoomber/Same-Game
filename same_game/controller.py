@@ -1,7 +1,7 @@
 # This module will intake commands and call the appropriate functions
 # Utilizes the game_state object and agent object
 
-from same_game import agent, game_state, searches, metrics
+from same_game import agent, game_state, searches, metrics, games
 from copy import deepcopy
 
 # pass in the reference (typically the board being searched on) and it will retrieve the metric data from that
@@ -109,8 +109,8 @@ def agentVSPlayer():
     print("The goal of this game is to remove as many color groupings of 2 or more tiles as possible.")
     print("The bigger the group you remove, the more points you score! Try to score as high as you can.")
     print()
+    name = input("What is your name? ")
     while True:
-        name = input("What is your name? ")
         size = int(input("What size board would you like to play on? (enter a single number. i.e. 5 = a 5x5 board) "))
         colors = int(input("How many different colors would you like? (Recommended 2 or more) "))
         board = game_state.State(name, size, colors)
@@ -150,6 +150,26 @@ def agentOnlyMetrics(boards):
             displayMetrics(boardCopy)
     # for s in metrics.searches:
     #     displayAvg(s)
+
+# runs alphabeta search on a list of boards
+def gameAgentOnly(boards):
+    print('Agent test for a game search:')
+    print('-----------------------------')
+    for board in boards:
+        depthBoard = deepcopy(board)
+        print('Starting board:\n', board.data)
+        print('--Alpha Beta Full Search------------------')
+        move = games.alphabeta_singleplayer(agent.GameAgent(board), board)
+        board.remove(move)
+        print('Chosen move\n', move)
+        print('Resulting board\n', board.data)
+        print()
+        print('--Alpha Beta Depth Limit Search ----------')
+        move = games.alphabeta_singleplayer_depthlimit(agent.GameAgent(depthBoard), depthBoard, 1)
+        depthBoard.remove(move)
+        print('Chosen move\n', move)
+        print('Resulting board\n', depthBoard.data)
+
 
 if __name__ == '__main__':
     agentVSPlayer()

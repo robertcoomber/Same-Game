@@ -29,8 +29,16 @@ def test_controller():
 
     controller.agentOnlyMetrics(testBoards)
 
+def test_game_search():
+    testBoards = [
+        state.State("Game1", 5, 3),
+    ]
+
+    controller.gameAgentOnly(testBoards)
+
 
 # Call functions here to run specific tests
 if __name__ == '__main__':
-    test_game_state()
-    test_controller()
+    # test_game_state()
+    # test_controller()
+    test_game_search()
