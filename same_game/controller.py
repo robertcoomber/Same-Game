@@ -4,6 +4,7 @@
 from same_game import agent, game_state, searches, metrics, games
 from copy import deepcopy
 
+
 # pass in the reference (typically the board being searched on) and it will retrieve the metric data from that
 # specific board memory location
 # prints out all the data from the specified test
@@ -24,6 +25,7 @@ def displayMetrics(reference):
     print('Depth of solution:', depth)
     print('Number of nodes explored:', nodes)
     print('Seconds taken:', time)
+
 
 def displayAvg(search):
     print(search.upper(), "AVERAGES:")
@@ -47,6 +49,7 @@ def displayAvg(search):
     print('Average depth of solution:', avgdepth)
     print('Average number of nodes explored:', avgnodes)
     print('Average seconds taken:', avgtime)
+
 
 # will run the search and store metrics based on the memory location of the board
 # parameters: search - a string that represents the search type ex: depth or breadth
@@ -84,6 +87,34 @@ def runSearch(search, board):
     print('Final board (', search, '):\n', result.state.data)
 
 
+def runGame(search, board, depthLimit):
+    print()
+    print(search.upper(), "============================")
+    print('Starting board (', search, '):\n', board.data)
+    movesList = []
+    # metrics.startTime(board.__repr__())
+    if search == "full alpha beta":
+        while board.movesLeft():
+            move = games.alphabeta_singleplayer(agent.GameAgent(board), board)
+            movesList.append(move)
+            board.remove(move)
+    elif search == "depth limited alpha beta":
+        while board.movesLeft():
+            move = games.alphabeta_singleplayer_depthlimit(agent.GameAgent(board), board, depthLimit)
+            movesList.append(move)
+            board.remove(move)
+    # time = metrics.getTime(board.__repr__())
+    # metrics.setMetrics(board.__repr__(), movesList, board.score, None, None, time)
+    # metrics.saveResults(board.__repr__(), movesList, board.score, None, None, time)
+    # metrics.agentScore = board.score
+    print('Final board (', search, '):\n', board.data)
+    print('\nMoves taken:')
+    count = 1
+    for move in movesList:
+        print(count, ')', move)
+        count += 1
+    print('Score achieved:', board.score)
+
 
 # runs the block of code where the player searches the board
 # parameters: board - the board for the player to search in
@@ -102,6 +133,7 @@ def playerInput(board):
     print("Final Board:")
     print(board.data)
     print("Final Score:", board.score)
+
 
 # the mode where the player can play against a search algorithm of choice
 def agentVSPlayer():
@@ -139,6 +171,7 @@ def agentVSPlayer():
         if(input("Play again? (y/n) ") == 'n'):
             break
 
+
 # runs search algorithms on a list of boards, reporting the metrics for each
 def agentOnlyMetrics(boards):
     print('Agent metrics on set of input same-game boards:')
@@ -151,24 +184,16 @@ def agentOnlyMetrics(boards):
     # for s in metrics.searches:
     #     displayAvg(s)
 
+
 # runs alphabeta search on a list of boards
-def gameAgentOnly(boards):
+def gameAgentOnly(boards, depthLimit):
     print('Agent test for a game search:')
     print('-----------------------------')
     for board in boards:
-        depthBoard = deepcopy(board)
-        print('Starting board:\n', board.data)
-        print('--Alpha Beta Full Search------------------')
-        move = games.alphabeta_singleplayer(agent.GameAgent(board), board)
-        board.remove(move)
-        print('Chosen move\n', move)
-        print('Resulting board\n', board.data)
-        print()
-        print('--Alpha Beta Depth Limit Search ----------')
-        move = games.alphabeta_singleplayer_depthlimit(agent.GameAgent(depthBoard), depthBoard, 1)
-        depthBoard.remove(move)
-        print('Chosen move\n', move)
-        print('Resulting board\n', depthBoard.data)
+        for s in metrics.gameSearches:
+            boardCopy = deepcopy(board)
+            runGame(s, boardCopy, depthLimit)
+            # displayMetrics(boardCopy)
 
 
 if __name__ == '__main__':

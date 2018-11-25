@@ -32,9 +32,10 @@ def test_controller():
 def test_game_search():
     testBoards = [
         state.State("Game1", 5, 3),
+        state.State("Game2", 7, 3),
     ]
 
-    controller.gameAgentOnly(testBoards)
+    controller.gameAgentOnly(testBoards, 1)
 
 
 # Call functions here to run specific tests
