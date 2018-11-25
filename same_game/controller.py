@@ -1,8 +1,9 @@
 # This module will intake commands and call the appropriate functions
 # Utilizes the game_state object and agent object
 
-from same_game import agent, game_state, searches, metrics
+from same_game import agent, game_state, searches, metrics, games
 from copy import deepcopy
+
 
 # pass in the reference (typically the board being searched on) and it will retrieve the metric data from that
 # specific board memory location
@@ -24,6 +25,7 @@ def displayMetrics(reference):
     print('Depth of solution:', depth)
     print('Number of nodes explored:', nodes)
     print('Seconds taken:', time)
+
 
 def displayAvg(search):
     print(search.upper(), "AVERAGES:")
@@ -48,6 +50,7 @@ def displayAvg(search):
     print('Average number of nodes explored:', avgnodes)
     print('Average seconds taken:', avgtime)
 
+
 # will run the search and store metrics based on the memory location of the board
 # parameters: search - a string that represents the search type ex: depth or breadth
 #             board - the board to be searched
@@ -65,7 +68,13 @@ def runSearch(search, board):
     elif search == "flounder":
         result = searches.flounder(ag)
     elif search == "greedy":
-        result = searches.greedy_tree_search(ag)
+        result = searches.greedy_tree_search_score(ag)
+    elif search == "greedy score":
+        result = searches.greedy_tree_search_score(ag)
+    elif search == "greedy move":
+        result = searches.greedy_tree_search_move(ag)
+    elif search == "greedy tiles":
+        result = searches.greedy_tree_search_score_plus_tilesRemaining(ag)
     time = metrics.getTime(board.__repr__())
     path = result.path()
     moves = []
@@ -77,6 +86,34 @@ def runSearch(search, board):
     metrics.agentScore = result.state.score
     print('Final board (', search, '):\n', result.state.data)
 
+
+def runGame(search, board, depthLimit):
+    print()
+    print(search.upper(), "============================")
+    print('Starting board (', search, '):\n', board.data)
+    movesList = []
+    # metrics.startTime(board.__repr__())
+    if search == "full alpha beta":
+        while board.movesLeft():
+            move = games.alphabeta_singleplayer(agent.GameAgent(board), board)
+            movesList.append(move)
+            board.remove(move)
+    elif search == "depth limited alpha beta":
+        while board.movesLeft():
+            move = games.alphabeta_singleplayer_depthlimit(agent.GameAgent(board), board, depthLimit)
+            movesList.append(move)
+            board.remove(move)
+    # time = metrics.getTime(board.__repr__())
+    # metrics.setMetrics(board.__repr__(), movesList, board.score, None, None, time)
+    # metrics.saveResults(board.__repr__(), movesList, board.score, None, None, time)
+    # metrics.agentScore = board.score
+    print('Final board (', search, '):\n', board.data)
+    print('\nMoves taken:')
+    count = 1
+    for move in movesList:
+        print(count, ')', move)
+        count += 1
+    print('Score achieved:', board.score)
 
 
 # runs the block of code where the player searches the board
@@ -95,6 +132,8 @@ def playerInput(board):
     metrics.playerScore = board.score
     print("Final Board:")
     print(board.data)
+    print("Final Score:", board.score)
+
 
 # the mode where the player can play against a search algorithm of choice
 def agentVSPlayer():
@@ -102,8 +141,8 @@ def agentVSPlayer():
     print("The goal of this game is to remove as many color groupings of 2 or more tiles as possible.")
     print("The bigger the group you remove, the more points you score! Try to score as high as you can.")
     print()
+    name = input("What is your name? ")
     while True:
-        name = input("What is your name? ")
         size = int(input("What size board would you like to play on? (enter a single number. i.e. 5 = a 5x5 board) "))
         colors = int(input("How many different colors would you like? (Recommended 2 or more) "))
         board = game_state.State(name, size, colors)
@@ -115,7 +154,7 @@ def agentVSPlayer():
         print()
         search = ""
         while search != "breadth" and search != "depth" and search != "greedy" and search != "flounder":
-            search = input("What search would you like? (breadth, depth, flounder, or greedy)")
+            search = input("What search would you like? (breadth, depth, flounder, or greedy) ")
         print("Now lets see how the agent did...")
         runSearch(search, boardCopy)
         displayMetrics(boardCopy)
@@ -132,6 +171,7 @@ def agentVSPlayer():
         if(input("Play again? (y/n) ") == 'n'):
             break
 
+
 # runs search algorithms on a list of boards, reporting the metrics for each
 def agentOnlyMetrics(boards):
     print('Agent metrics on set of input same-game boards:')
@@ -143,6 +183,18 @@ def agentOnlyMetrics(boards):
             displayMetrics(boardCopy)
     # for s in metrics.searches:
     #     displayAvg(s)
+
+
+# runs alphabeta search on a list of boards
+def gameAgentOnly(boards, depthLimit):
+    print('Agent test for a game search:')
+    print('-----------------------------')
+    for board in boards:
+        for s in metrics.gameSearches:
+            boardCopy = deepcopy(board)
+            runGame(s, boardCopy, depthLimit)
+            # displayMetrics(boardCopy)
+
 
 if __name__ == '__main__':
     agentVSPlayer()

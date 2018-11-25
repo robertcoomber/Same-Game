@@ -214,10 +214,37 @@ def depth_first_graph_search(problem):
     "Search the deepest nodes in the search tree first."
     return graph_search(problem, Stack())
 
-def greedy_tree_search(problem):
-    "Search the nodes with the highest f(n) in the search tree first."
+
+def greedy_tree_search_score(problem):
+    "Search the nodes with the highest resulting score."
     node = Node(problem.initial)
     frontier = PriorityNodeQueue(max, lambda x: x.state.score)
+    frontier.append(node)
+    while frontier:
+        node = frontier.pop()
+        if problem.goal_test(node.state):
+            return node
+        frontier.extend(node.expand(problem))
+    return None
+
+
+def greedy_tree_search_move(problem):
+    "Search the nodes with the highest color value first."
+    node = Node(problem.initial)
+    frontier = PriorityNodeQueue(min, lambda x: 0 if node.action is None else (x.state.data[node.action[0][0], node.action[0][1]]))
+    frontier.append(node)
+    while frontier:
+        node = frontier.pop()
+        if problem.goal_test(node.state):
+            return node
+        frontier.extend(node.expand(problem))
+    return None
+
+def greedy_tree_search_score_plus_tilesRemaining(problem):
+    """Search the nodes with the highest current score plus the number of remaining tiles, valued similarly to
+    the removal scoring function."""
+    node = Node(problem.initial)
+    frontier = PriorityNodeQueue(max, lambda x: x.state.score + ((x.state.remainingTiles() - 1) ** 2))
     frontier.append(node)
     while frontier:
         node = frontier.pop()

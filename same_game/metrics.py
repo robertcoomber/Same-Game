@@ -11,7 +11,8 @@ references = {}
 allMetrics = {}
 allResults = {}
 
-searches = ['breadth', 'depth', 'flounder', 'greedy']
+searches = ['breadth', 'depth', 'flounder', 'greedy score', 'greedy move', 'greedy tiles']
+gameSearches = ['full alpha beta', 'depth limited alpha beta']
 
 #pass in a reference so that it can save the specific time to a dicitonary, and then compare it to the end time once the reference is passed in again
 def startTime(reference):

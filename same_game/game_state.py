@@ -138,6 +138,10 @@ class State:
     def count(self, move):
         return len(move)
 
+    # Returns the number of tiles that are left
+    def remainingTiles(self):
+        return np.count_nonzero(self.data)
+
     # Checks to see if the board is empty, returning true if it is, false otherwise
     def isEmpty(self):
         if np.count_nonzero(self.data) == 0:
