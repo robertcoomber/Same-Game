@@ -65,7 +65,13 @@ def runSearch(search, board):
     elif search == "flounder":
         result = searches.flounder(ag)
     elif search == "greedy":
-        result = searches.greedy_tree_search(ag)
+        result = searches.greedy_tree_search_score(ag)
+    elif search == "greedy score":
+        result = searches.greedy_tree_search_score(ag)
+    elif search == "greedy move":
+        result = searches.greedy_tree_search_move(ag)
+    elif search == "greedy tiles":
+        result = searches.greedy_tree_search_score_plus_tilesRemaining(ag)
     time = metrics.getTime(board.__repr__())
     path = result.path()
     moves = []
@@ -95,6 +101,7 @@ def playerInput(board):
     metrics.playerScore = board.score
     print("Final Board:")
     print(board.data)
+    print("Final Score:", board.score)
 
 # the mode where the player can play against a search algorithm of choice
 def agentVSPlayer():
@@ -115,7 +122,7 @@ def agentVSPlayer():
         print()
         search = ""
         while search != "breadth" and search != "depth" and search != "greedy" and search != "flounder":
-            search = input("What search would you like? (breadth, depth, flounder, or greedy)")
+            search = input("What search would you like? (breadth, depth, flounder, or greedy) ")
         print("Now lets see how the agent did...")
         runSearch(search, boardCopy)
         displayMetrics(boardCopy)
