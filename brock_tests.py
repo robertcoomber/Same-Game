@@ -1,5 +1,5 @@
 from same_game import game_state as state
-from same_game import controller
+from same_game import controller, metrics
 
 def test_game_state():
     testArray = state.State("testArray", 10, 4)
@@ -21,15 +21,40 @@ def test_game_state():
     print(testArray.isEmpty(),'\n')
 
 def test_controller():
-    testBoards = [
-        state.State("Test1", 7, 2),
-        state.State("Test2", 5, 2),
-        #state.State("Test2", 3, 3),
-    ]
+    for i in range(10):
+        testBoards = [
+            state.State("Test1."+str(i), 5, 2),
+            state.State("Test2."+str(i), 6, 2),
+            state.State("Test3."+str(i), 10, 2),
+            state.State("Test4."+str(i), 5, 3),
+            state.State("Test5."+str(i), 6, 3),
+            state.State("Test6."+str(i), 10, 3),
+            state.State("Test7."+str(i), 5, 4),
+            state.State("Test8."+str(i), 6, 4),
+            state.State("Test9."+str(i), 5, 5),
+        ]
+        controller.agentOnlyMetrics(testBoards)
 
-    controller.agentOnlyMetrics(testBoards)
+def test_game_search():
+    for ii in range(3):
+        for i in range(10):
+            testBoards = [
+                state.State("Game1."+str(i), 5, 2),
+                state.State("Game2."+str(i), 6, 2),
+                state.State("Game3."+str(i), 10, 2),
+                state.State("Game4."+str(i), 5, 3),
+                state.State("Game5."+str(i), 6, 3),
+                state.State("Game6."+str(i), 10, 3),
+                state.State("Game7."+str(i), 5, 4),
+                state.State("Game8."+str(i), 6, 4),
+                state.State("Game9."+str(i), 5, 5),
+            ]
+            controller.gameAgentOnly(testBoards, ii+1)
 
 
 # Call functions here to run specific tests
-# test_game_state()
-test_controller()
+if __name__ == '__main__':
+    # test_game_state()
+    test_controller()
+    #test_game_search()
+    metrics.writeCSVFile()

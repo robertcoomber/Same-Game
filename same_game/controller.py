@@ -82,14 +82,14 @@ def runSearch(search, board):
         if node.action:
             moves.append(node.action)
     metrics.setMetrics(board.__repr__(), moves, result.state.score, result.depth, ag.nodesExplored, time)
-    metrics.saveResults(search, board.__repr__(), moves, result.state.score, result.depth, ag.nodesExplored, time)
+    metrics.saveResults(board.name, search, board.__repr__(), result.state.score, result.depth, ag.nodesExplored, time, board.colors, board.size)
     metrics.agentScore = result.state.score
     print('Final board (', search, '):\n', result.state.data)
 
 
 def runGame(search, board, depthLimit):
     print()
-    print(search.upper(), "============================")
+    print(search.upper(), "============================ DEPTH LIMIT:", depthLimit)
     print('Starting board (', search, '):\n', board.data)
     movesList = []
     # metrics.startTime(board.__repr__())

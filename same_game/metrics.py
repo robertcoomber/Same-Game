@@ -1,4 +1,5 @@
 import time
+import csv
 
 playerScore = 0
 playerMoves = 0
@@ -6,13 +7,14 @@ playerTime = 0
 agentScore = 0
 agentMoves = 0
 
-# dictionary of clocks
 references = {}
 allMetrics = {}
-allResults = {}
+allResults = []
 
-searches = ['breadth', 'depth', 'flounder', 'greedy score', 'greedy move', 'greedy tiles']
-gameSearches = ['full alpha beta', 'depth limited alpha beta']
+# searches = ['breadth', 'depth', 'flounder', 'greedy score', 'greedy move', 'greedy tiles']
+# gameSearches = ['full alpha beta', 'depth limited alpha beta']
+searches = ['depth', 'flounder', 'greedy score']
+gameSearches = ['depth limited alpha beta']
 
 #pass in a reference so that it can save the specific time to a dicitonary, and then compare it to the end time once the reference is passed in again
 def startTime(reference):
@@ -29,17 +31,19 @@ def setMetrics(reference, moves, score, depth, nodes, time):
     allMetrics[str(reference)] = [moves, score, depth, nodes, time]
 
 # stores the metrics within a dictionary of lists with keys of each search that return a list of results
-def saveResults(search, reference, moves, score, depth, nodes, time):
-    if search in allResults:
-        allResults[search] = allResults[search].append([reference, moves, score, depth, nodes, time])
-    else:
-        allResults[search] = [[reference, moves, score, depth, nodes, time]]
+def saveResults(name, search, reference, score, depth, nodes, time, colors, size):
+    allResults.append([name, search, reference, score, depth, nodes, time, colors, size])
 
 def getResults(search):
     return allResults[search]
 
 def getMetrics(reference):
     return allMetrics[str(reference)]
+
+def writeCSVFile():
+    with open('output.csv', 'w', newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(allResults)
 
 if __name__ == '__main__':
     startTime("key")
