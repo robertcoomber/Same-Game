@@ -36,20 +36,19 @@ def test_controller():
         controller.agentOnlyMetrics(testBoards)
 
 def test_game_search():
-    for ii in range(2):
-        for i in range(5):
-            testBoards = [
-                state.State("Game1."+str(i), 5, 2),
-                # state.State("Game2."+str(i), 6, 2),
-                # state.State("Game3."+str(i), 10, 2),
-                state.State("Game4."+str(i), 5, 3),
-                # state.State("Game5."+str(i), 6, 3),
-                # state.State("Game6."+str(i), 10, 3),
-                state.State("Game7."+str(i), 5, 4),
-                # state.State("Game8."+str(i), 6, 4),
-                state.State("Game9."+str(i), 5, 5),
-            ]
-            controller.gameAgentOnly(testBoards, 1)
+    for i in range(10):
+        testBoards = [
+            state.State("Game1."+str(i), 5, 2),
+            # state.State("Game2."+str(i), 6, 2),
+            # state.State("Game3."+str(i), 10, 2),
+            state.State("Game4."+str(i), 5, 3),
+            # state.State("Game5."+str(i), 6, 3),
+            # state.State("Game6."+str(i), 10, 3),
+            state.State("Game7."+str(i), 5, 4),
+            # state.State("Game8."+str(i), 6, 4),
+            state.State("Game9."+str(i), 5, 5),
+        ]
+        controller.gameAgentOnly(testBoards, 1)
 
 
 # Call functions here to run specific tests
