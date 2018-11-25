@@ -91,22 +91,24 @@ def runGame(search, board, depthLimit):
     print()
     print(search.upper(), "============================ DEPTH LIMIT:", depthLimit)
     print('Starting board (', search, '):\n', board.data)
+    ag = agent.GameAgent(board)
     movesList = []
-    # metrics.startTime(board.__repr__())
+    metrics.startTime(board.__repr__())
     if search == "full alpha beta":
         while board.movesLeft():
-            move = games.alphabeta_singleplayer(agent.GameAgent(board), board)
+            move = games.alphabeta_singleplayer(ag, board)
             movesList.append(move)
             board.remove(move)
     elif search == "depth limited alpha beta":
         while board.movesLeft():
-            move = games.alphabeta_singleplayer_depthlimit(agent.GameAgent(board), board, depthLimit)
+            move = games.alphabeta_singleplayer_depthlimit(ag, board, depthLimit)
             movesList.append(move)
             board.remove(move)
-    # time = metrics.getTime(board.__repr__())
+    time = metrics.getTime(board.__repr__())
     # metrics.setMetrics(board.__repr__(), movesList, board.score, None, None, time)
-    # metrics.saveResults(board.__repr__(), movesList, board.score, None, None, time)
-    # metrics.agentScore = board.score
+    metrics.saveResults(board.name, search, board.__repr__(), None, None, None, time,
+                        board.colors, board.size)
+    metrics.agentScore = board.score
     print('Final board (', search, '):\n', board.data)
     print('\nMoves taken:')
     count = 1
