@@ -116,7 +116,7 @@ def runGame(search, board, depthLimit):
             board.remove(move)
     time = metrics.getTime(board.__repr__())
     # metrics.setMetrics(board.__repr__(), movesList, board.score, None, None, time)
-    metrics.saveResults(board.name, search, board.__repr__(), None, None, None, time,
+    metrics.saveResults(board.name, search, board.__repr__(), time, None, None, time,
                         board.colors, board.size)
     metrics.agentScore = board.score
     print('Final board (', search, '):\n', board.data)
