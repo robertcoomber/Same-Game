@@ -115,7 +115,6 @@ class State:
         moveScore = self.count(move)    # get the score for the move
         self.score += ((moveScore - 2) ** 2)        # add it to the total score
 
-
         for i in range(len(move)):
             self.data[move[i][0], move[i][1]] = 0
         for i in range(self.size):
@@ -136,6 +135,8 @@ class State:
 
     # returns number of squares connected within a move (a move is a list of coordinates)
     def count(self, move):
+        if move == None:
+            return 0
         return len(move)
 
     # Returns the number of tiles that are left
