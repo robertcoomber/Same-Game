@@ -93,9 +93,19 @@ def runGame(search, board, depthLimit):
     print('Starting board (', search, '):\n', board.data)
     movesList = []
     # metrics.startTime(board.__repr__())
-    if search == "full alpha beta":
+    if search == "full depth maximizing":
         while board.movesLeft():
-            move = games.alphabeta_singleplayer(agent.GameAgent(board), board)
+            move = games.maximizing_singleplayer(agent.GameAgent(board), board)
+            movesList.append(move)
+            board.remove(move)
+    elif search == "depth limited maximizing":
+        while board.movesLeft():
+            move = games.maximizing_singleplayer_depthlimit(agent.GameAgent(board), board, depthLimit)
+            movesList.append(move)
+            board.remove(move)
+    elif search == "full alpha beta":
+        while board.movesLeft():
+            move = games.alphabeta_singleplayer(agent.GameAgent(board), board, depthLimit)
             movesList.append(move)
             board.remove(move)
     elif search == "depth limited alpha beta":

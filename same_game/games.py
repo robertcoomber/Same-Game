@@ -121,7 +121,7 @@ def alphabeta_search(state, game, d=4, cutoff_test=None, eval_fn=None):
                    # (lambda state, depth: depth > d or
                    (evL or
                     game.terminal_test(state)))
-    eval_fn = eval_fn or (lambda state: game.utility(state, player))
+    eval_fn = eval_fn or (lambda state: game.utility(state))
     best_score = -infinity
     beta = infinity
     best_action = None
@@ -215,10 +215,65 @@ def alphabeta_singleplayer_depthsearch(state, game, d=4, cutoff_test=None, eval_
     best_action = None
     for a in game.actions(state):
         v = min_value(game.result(state, a), best_score, beta, 1)
+        if v >= best_score:
+            best_score = v
+            best_action = a
+    return best_action
+
+
+def maximizing_singleplayer_search(state, game):
+    """Adopted from Alpha Beta search for a single player game, or a two player game where each player
+    has their own game board and tries to outscore the other player. Searches from root to leaves"""
+
+    # Functions used by alphabeta
+    def max_value(state):
+        if game.terminal_test(state):
+            return game.utility(state)
+        v = -infinity
+        for a in game.actions(state):
+            v = max(v, max_value(game.result(state, a)))
+        return v
+
+    # Body of alphabeta_search:
+    best_score = -infinity
+    beta = infinity
+    best_action = None
+    for a in game.actions(state):
+        v = max_value(game.result(state, a))
         if v > best_score:
             best_score = v
             best_action = a
     return best_action
+
+
+def maximizing_score_depth_search(state, game, d=4, cutoff_test=None, eval_fn=None):
+    """Search adopted from Alpha Beta search. Works for an agent trying to maximize their score in a single player game,
+    or a game where the agent is competing against an opponent, but plays on their own game board"""
+
+    # Maximizing function
+    def max_value(state, depth):
+        if cutoff_test(state, depth):
+            return eval_fn(state)
+        v = -infinity
+        for a in game.actions(state):
+            v = max(v, max_value(game.result(state, a), depth + 1))
+        return v
+
+    # Body of search:
+    evL = lambda state, depth: depth > d
+    cutoff_test = (cutoff_test or
+                   (evL or
+                    game.terminal_test(state)))
+    eval_fn = eval_fn or (lambda state: game.utility(state))
+    best_score = -infinity
+    best_action = None
+    for a in game.actions(state):
+        v = max_value(game.result(state, a), 1)
+        if v >= best_score:
+            best_score = v
+            best_action = a
+    return best_action
+
 
 # ______________________________________________________________________________
 # Players for Games
@@ -246,8 +301,17 @@ def alphabeta_player(game, state):
 def alphabeta_singleplayer(game, state):
     return alphabeta_singleplayer_search(state, game)
 
+
 def alphabeta_singleplayer_depthlimit(game, state, depth):
     return alphabeta_singleplayer_depthsearch(state, game, depth)
+
+
+def maximizing_singleplayer(game, state):
+    return maximizing_singleplayer_search(state, game)
+
+
+def maximizing_singleplayer_depthlimit(game, state, depth):
+    return maximizing_score_depth_search(state, game, depth)
 
 
 def play_game(game, *players):
