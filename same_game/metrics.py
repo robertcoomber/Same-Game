@@ -6,6 +6,7 @@ playerMoves = 0
 playerTime = 0
 agentScore = 0
 agentMoves = 0
+agentTime = 0
 agentMoveList = []
 
 references = {}
@@ -32,8 +33,8 @@ def setMetrics(reference, moves, score, depth, nodes, time):
     allMetrics[str(reference)] = [moves, score, depth, nodes, time]
 
 # stores the metrics within a dictionary of lists with keys of each search that return a list of results
-def saveResults(name, search, reference, score, depth, nodes, time, colors, size):
-    allResults.append([name, search, reference, score, depth, nodes, time, colors, size])
+def saveResults(date, name, search, reference, score, depth, nodes, time, colors, size, depthLimit):
+    allResults.append([date, name, search, reference, score, depth, nodes, time, colors, size, depthLimit])
 
 def getResults(search):
     return allResults[search]
@@ -42,7 +43,7 @@ def getMetrics(reference):
     return allMetrics[str(reference)]
 
 def writeCSVFile():
-    with open('output.csv', 'w', newline="") as f:
+    with open('records.csv', 'a', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(allResults)
 

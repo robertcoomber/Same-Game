@@ -3,6 +3,8 @@
 
 from same_game import agent, game_state, searches, metrics, games, gui
 from copy import deepcopy
+import time
+import datetime
 
 
 # pass in the reference (typically the board being searched on) and it will retrieve the metric data from that
@@ -75,22 +77,24 @@ def runSearch(search, board):
         result = searches.greedy_tree_search_move(ag)
     elif search == "greedy tiles":
         result = searches.greedy_tree_search_score_plus_tilesRemaining(ag)
-    time = metrics.getTime(board.__repr__())
+    t = metrics.getTime(board.__repr__())
     path = result.path()
     moves = []
     for node in path:
         if node.action:
             moves.append(node.action)
-    metrics.setMetrics(board.__repr__(), moves, result.state.score, result.depth, ag.nodesExplored, time)
-    metrics.saveResults(board.name, search, board.__repr__(), result.state.score, result.depth, ag.nodesExplored, time, board.colors, board.size)
+    metrics.setMetrics(board.__repr__(), moves, result.state.score, result.depth, ag.nodesExplored, t)
+    ts = time.time()
+    st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    metrics.saveResults(st, board.name, search, board.__repr__(), result.state.score, result.depth, ag.nodesExplored, t, board.colors, board.size, 1)
     metrics.agentScore = result.state.score
     print('Final board (', search, '):\n', result.state.data)
 
 
 def runGame(search, board, depthLimit):
-    print()
-    print(search.upper(), "============================ DEPTH LIMIT:", depthLimit)
-    print('Starting board (', search, '):\n', board.data)
+    # print()
+    # print(search.upper(), "============================ DEPTH LIMIT:", depthLimit)
+    # print('Starting board (', search, '):\n', board.data)
     ag = agent.GameAgent(board)
     movesList = []
     metrics.startTime(board.__repr__())
@@ -117,10 +121,12 @@ def runGame(search, board, depthLimit):
             move = games.alphabeta_singleplayer_depthlimit(ag, board, depthLimit)
             movesList.append(move)
             board.remove(move)
-    time = metrics.getTime(board.__repr__())
+    t = metrics.getTime(board.__repr__())
     # metrics.setMetrics(board.__repr__(), movesList, board.score, None, None, time)
-    metrics.saveResults(board.name, search, board.__repr__(), board.score, None, None, time,
-                        board.colors, board.size)
+    ts = time.time()
+    st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    metrics.saveResults(st, board.name, search, board.__repr__(), board.score, None, None, t,
+                        board.colors, board.size, depthLimit)
     metrics.agentScore = board.score
     metrics.agentMoveList = movesList
     gui.finalAgentBoard(board)
@@ -150,8 +156,10 @@ def playerInput(board):
         board.remove(board.moves()[x])
         metrics.playerScore = board.score
     metrics.playerTime = metrics.getTime("player")
-    metrics.saveResults(board.name, "player", board.__repr__(), metrics.playerScore, None, None, metrics.playerTime,
-                        board.colors, board.size)
+    ts = time.time()
+    st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    metrics.saveResults(st, board.name, "player", board.__repr__(), metrics.playerScore, None, None, metrics.playerTime,
+                        board.colors, board.size, 0)
     # print("Final Board:")
     # print(board.data)
     # print("Final Score:", board.score)
