@@ -25,8 +25,9 @@ def waitTillAnyClick():
     return
 
 def getName():
-    prompt = Text(Point(250, 230),
+    prompt = Text(Point(250, 220),
                 "Please enter your name:")
+    prompt.setSize(20)
     inputBox = Entry(Point(250, 250), 50)
     inputBox.draw(win)
     prompt.draw(win)
@@ -35,6 +36,7 @@ def getName():
     go = Rectangle(go1, go2)
     goTxt = Text(Point(250, 280),
                   "Enter")
+    goTxt.setStyle("bold")
     go.draw(win)
     goTxt.draw(win)
     waitTillClick(go1, go2)
@@ -46,23 +48,29 @@ def getName():
     return name
 
 def getSize():
-    prompt = Text(Point(250, 230),
+    prompt = Text(Point(250, 220),
                 "What size board would you like to play on?")
+    prompt.setSize(20)
+    prompt.setStyle("italic")
     prompt.draw(win)
     go0 = Rectangle(Point(240,250), Point(260,270))
     go0Txt = Text(Point(250, 260),"3")
+    go0Txt.setStyle("bold")
     go0.draw(win)
     go0Txt.draw(win)
     go1 = Rectangle(Point(240, 275), Point(260, 295))
     go1Txt = Text(Point(250, 285), "4")
+    go1Txt.setStyle("bold")
     go1.draw(win)
     go1Txt.draw(win)
     go2 = Rectangle(Point(240, 300), Point(260, 320))
     go2Txt = Text(Point(250, 310), "5")
+    go2Txt.setStyle("bold")
     go2.draw(win)
     go2Txt.draw(win)
     go3 = Rectangle(Point(240, 325), Point(260, 345))
     go3Txt = Text(Point(250, 335), "6")
+    go3Txt.setStyle("bold")
     go3.draw(win)
     go3Txt.draw(win)
     index = waitTillClickSections([go0, go1, go2, go3])
@@ -81,39 +89,166 @@ def getSize():
         return 4
     elif index == 2:
         return 5
-    elif indexx == 3:
+    elif index == 3:
         return 6
 
 def updateBoard(board):
-    return 0
+    s = board.size
+    r = []
+    for i in range(s):
+        for ii in range(s):
+            r.append( Rectangle( Point(50+((400/s)*ii),50+((400/s)*i)), Point(50+((400/s)*(ii+1)),50+((400/s)*(i+1))) ) )
+    index = 0
+    score = Text(Point(250, 475),"Score: " + str(metrics.playerScore))
+    score.setStyle("bold")
+    score.draw(win)
+    move = Text(Point(250, 25),"Move " + str(metrics.playerMoves))
+    move.setStyle("bold")
+    move.draw(win)
+
+    for i in r:
+        i.setOutline("black")
+        i.setWidth(2)
+        i.setFill(squareColor(board, index))
+        i.draw(win)
+        index += 1
+    toReturn = []
+    go = True
+    while go:
+        x = waitTillClickSections(r)
+        index = 0
+        for i in board.moves():
+            if [int(x/board.size),x%board.size] in i:
+                go = False
+                index -= 1
+            index += 1
+            if go == False:
+                break
+    for i in r:
+        i.undraw()
+    move.undraw()
+    score.undraw()
+    return index
+
+def squareColor(board, index):
+    x = board.data[int(index/board.size)][index%board.size]
+    if x == 0:
+        return "white"
+    elif x == 1:
+        return "red"
+    elif x == 2:
+        return "green"
+    elif x == 3:
+        return "blue"
+    elif x == 4:
+        return "yellow"
 
 def updateAgentBoard(board):
     return 0
 
 def finalBoard(board):
-    return 0
+    s = board.size
+    r = []
+    for i in range(s):
+        for ii in range(s):
+            r.append(Rectangle(Point(50 + ((400 / s) * ii), 50 + ((400 / s) * i)),
+                               Point(50 + ((400 / s) * (ii + 1)), 50 + ((400 / s) * (i + 1)))))
+    index = 0
+    prompt = Text(Point(250, 475), "Click anywhere to continue...")
+    prompt.setSize(20)
+    prompt.setStyle("italic")
+    prompt.draw(win)
+    move = Text(Point(250, 25), "You scored " + str(metrics.playerScore) + " in " + str(metrics.playerMoves) + " moves!")
+    move.setStyle("bold")
+    move.setSize(20)
+    move.draw(win)
+    for i in r:
+        i.setOutline("black")
+        i.setWidth(2)
+        i.setFill(squareColor(board, index))
+        i.draw(win)
+        index += 1
+    prompt2 = Text(Point(250, 250), "END")
+    prompt2.setStyle("bold")
+    prompt2.setTextColor("grey")
+    prompt2.setSize(36)
+    prompt2.draw(win)
+    win.getMouse()
+    for i in r:
+        i.undraw()
+    prompt.undraw()
+    prompt2.undraw()
+    move.undraw()
 
 def finalAgentBoard(board):
     return 0
+
+def difficulty():
+    prompt = Text(Point(250, 220),
+                  "Now it is time to see how the artificial intelligence scores...")
+    prompt.setSize(16)
+    prompt.setStyle("italic")
+    prompt.draw(win)
+    prompt2 = Text(Point(250, 250),
+                  "Please select the diffculty of the agent:")
+    prompt2.setStyle("bold")
+    prompt2.draw(win)
+    go1 = Rectangle(Point(225, 275), Point(275, 295))
+    go1Txt = Text(Point(250, 285), "Easy")
+    go1Txt.setStyle("bold")
+    go1.draw(win)
+    go1Txt.draw(win)
+    go2 = Rectangle(Point(225, 300), Point(275, 320))
+    go2Txt = Text(Point(250, 310), "Medium")
+    go2Txt.setStyle("bold")
+    go2.draw(win)
+    go2Txt.draw(win)
+    go3 = Rectangle(Point(225, 325), Point(275, 345))
+    go3Txt = Text(Point(250, 335), "Hard")
+    go3Txt.setStyle("bold")
+    go3.draw(win)
+    go3Txt.draw(win)
+    index = waitTillClickSections([go1, go2, go3])
+    go1.undraw()
+    go1Txt.undraw()
+    go2.undraw()
+    go2Txt.undraw()
+    go3.undraw()
+    go3Txt.undraw()
+    prompt.undraw()
+    prompt2.undraw()
+    if index == 0:
+        return 1
+    elif index == 1:
+        return 2
+    elif index == 2:
+        return 3
 
 def results():
     return 0
 
 def intro():
     hello = Text(Point(250,200), "Welcome to the Same Game!")
+    hello.setStyle("bold")
+    hello.setSize(20)
     goal = Text(Point(250, 230), "The goal of this game is to remove as many color groupings of 2 or more tiles as possible.")
     points = Text(Point(250, 260), "The bigger the group you remove, the more points you score! Try to score as high as you can.")
-    n = Text(Point(250, 290),
-                  "Click anywhere to continue...")
+    points2 = Text(Point(250, 290),
+                  "You cannot remove groups of less than 2 tiles, and you will only score for groups greater than 2.")
+    n = Text(Point(250, 320),"Click anywhere to continue...")
+    n.setSize(20)
+    n.setStyle("italic")
     hello.draw(win)
     goal.draw(win)
     points.draw(win)
+    points2.draw(win)
     n.draw(win)
 
     win.getMouse()
     hello.undraw()
     goal.undraw()
     points.undraw()
+    points2.undraw()
     n.undraw()
     return
 

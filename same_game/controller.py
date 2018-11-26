@@ -164,10 +164,10 @@ def agentVSPlayer():
     # print()
     # name = input("What is your name? ")
     while True:
-        metrics.playerMoves = 0
+        metrics.playerMoves = 1
         metrics.playerScore = 0
         metrics.agentMoveList = []
-        metrics.agentMoves = 0
+        metrics.agentMoves = 1
         metrics.agentScore = 0
         gui.intro()
         name = gui.getName()
@@ -190,7 +190,8 @@ def agentVSPlayer():
         #     search = input("What search would you like? (breadth, depth, flounder, or greedy) ")
         # print("Now lets see how the agent did...")
         search = "depth limited maximizing"
-        runSearch(search, boardCopy)
+        depthLimit = gui.difficulty()
+        runGame(search, boardCopy, depthLimit)
         # displayMetrics(boardCopy)
         # print()
         # print("You scored:", metrics.playerScore)
