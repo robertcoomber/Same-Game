@@ -1,7 +1,7 @@
 # This module will intake commands and call the appropriate functions
 # Utilizes the game_state object and agent object
 
-from same_game import agent, game_state, searches, metrics, games
+from same_game import agent, game_state, searches, metrics, games, gui
 from copy import deepcopy
 
 
@@ -101,6 +101,8 @@ def runGame(search, board, depthLimit):
             board.remove(move)
     elif search == "depth limited maximizing":
         while board.movesLeft():
+            gui.updateAgentBoard(board)
+            metrics.agentMoves += 1
             move = games.maximizing_singleplayer_depthlimit(agent.GameAgent(board), board, depthLimit)
             movesList.append(move)
             board.remove(move)
@@ -116,72 +118,92 @@ def runGame(search, board, depthLimit):
             board.remove(move)
     time = metrics.getTime(board.__repr__())
     # metrics.setMetrics(board.__repr__(), movesList, board.score, None, None, time)
-    metrics.saveResults(board.name, search, board.__repr__(), time, None, None, time,
+    metrics.saveResults(board.name, search, board.__repr__(), board.score, None, None, time,
                         board.colors, board.size)
     metrics.agentScore = board.score
-    print('Final board (', search, '):\n', board.data)
-    print('\nMoves taken:')
-    count = 1
-    for move in movesList:
-        print(count, ')', move)
-        count += 1
-    print('Score achieved:', board.score)
+    metrics.agentMoveList = movesList
+    gui.finalAgentBoard(board)
+    # print('Final board (', search, '):\n', board.data)
+    # print('\nMoves taken:')
+    # count = 1
+    # for move in movesList:
+    #     print(count, ')', move)
+    #     count += 1
+    # print('Score achieved:', board.score)
 
 
 # runs the block of code where the player searches the board
 # parameters: board - the board for the player to search in
 def playerInput(board):
     while board.movesLeft():
+        x = gui.updateBoard(board)
         metrics.playerMoves += 1
-        print("Move", metrics.playerMoves)
-        print(board.data)
-        print('Current Score:', board.score)
-        print("Choose a move #:")
-        for i in range(len(board.moves())):
-            print(i, ")", board.moves()[i])
-        x = int(input("Your move: "))
+        # print("Move", metrics.playerMoves)
+        # print(board.data)
+        # print('Current Score:', board.score)
+        # print("Choose a move #:")
+        # for i in range(len(board.moves())):
+        #     print(i, ")", board.moves()[i])
+        # x = int(input("Your move: "))
         board.remove(board.moves()[x])
-    metrics.playerScore = board.score
-    print("Final Board:")
-    print(board.data)
-    print("Final Score:", board.score)
+        metrics.playerScore = board.score
+    metrics.playerTime = metrics.getTime("player")
+    metrics.saveResults(board.name, "player", board.__repr__(), metrics.playerScore, None, None, metrics.playerTime,
+                        board.colors, board.size)
+    # print("Final Board:")
+    # print(board.data)
+    # print("Final Score:", board.score)
+    gui.finalBoard(board)
 
 
 # the mode where the player can play against a search algorithm of choice
 def agentVSPlayer():
-    print("Welcome to the Same Game!")
-    print("The goal of this game is to remove as many color groupings of 2 or more tiles as possible.")
-    print("The bigger the group you remove, the more points you score! Try to score as high as you can.")
-    print()
-    name = input("What is your name? ")
+    # print("Welcome to the Same Game!")
+    # print("The goal of this game is to remove as many color groupings of 2 or more tiles as possible.")
+    # print("The bigger the group you remove, the more points you score! Try to score as high as you can.")
+    # print()
+    # name = input("What is your name? ")
     while True:
-        size = int(input("What size board would you like to play on? (enter a single number. i.e. 5 = a 5x5 board) "))
-        colors = int(input("How many different colors would you like? (Recommended 2 or more) "))
+        metrics.playerMoves = 0
+        metrics.playerScore = 0
+        metrics.agentMoveList = []
+        metrics.agentMoves = 0
+        metrics.agentScore = 0
+        gui.intro()
+        name = gui.getName()
+        # size = int(input("What size board would you like to play on? (enter a single number. i.e. 5 = a 5x5 board) "))
+        size = gui.getSize()
+        # colors = int(input("How many different colors would you like? (Recommended 2 or more) "))
+        if size == 3 or size == 4:
+            colors = 2
+        if size == 5 or size == 6:
+            colors = 3
         board = game_state.State(name, size, colors)
         boardCopy = deepcopy(board)
         metrics.startTime("player")
         playerInput(board)
-        metrics.playerTime = metrics.getTime("player")
-        print("You took", metrics.playerTime, "seconds!")
-        print()
-        search = ""
-        while search != "breadth" and search != "depth" and search != "greedy" and search != "flounder":
-            search = input("What search would you like? (breadth, depth, flounder, or greedy) ")
-        print("Now lets see how the agent did...")
-        runSearch(search, boardCopy)
-        displayMetrics(boardCopy)
-        print()
-        print("You scored:", metrics.playerScore)
-        print("Agent scored:", metrics.agentScore)
-        if metrics.playerScore > metrics.agentScore:
-            print("You win!")
-        elif metrics.playerScore == metrics.agentScore:
-            print("You tied!")
-        else:
-            print("You lost!")
 
-        if(input("Play again? (y/n) ") == 'n'):
-            break
+        # print("You took", metrics.playerTime, "seconds!")
+        # print()
+        # search = ""
+        # while search != "breadth" and search != "depth" and search != "greedy" and search != "flounder":
+        #     search = input("What search would you like? (breadth, depth, flounder, or greedy) ")
+        # print("Now lets see how the agent did...")
+        search = "depth limited maximizing"
+        runSearch(search, boardCopy)
+        # displayMetrics(boardCopy)
+        # print()
+        # print("You scored:", metrics.playerScore)
+        # print("Agent scored:", metrics.agentScore)
+        # if metrics.playerScore > metrics.agentScore:
+        #     print("You win!")
+        # elif metrics.playerScore == metrics.agentScore:
+        #     print("You tied!")
+        # else:
+        #     print("You lost!")
+        gui.results()
+        # if(input("Play again? (y/n) ") == 'n'):
+        #     break
 
 
 # runs search algorithms on a list of boards, reporting the metrics for each

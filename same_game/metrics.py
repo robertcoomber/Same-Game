@@ -6,6 +6,7 @@ playerMoves = 0
 playerTime = 0
 agentScore = 0
 agentMoves = 0
+agentMoveList = []
 
 references = {}
 allMetrics = {}
