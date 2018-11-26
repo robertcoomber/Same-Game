@@ -106,6 +106,7 @@ def runGame(search, board, depthLimit):
             move = games.maximizing_singleplayer_depthlimit(agent.GameAgent(board), board, depthLimit)
             movesList.append(move)
             board.remove(move)
+            metrics.agentScore = board.score
     elif search == "full alpha beta":
         while board.movesLeft():
             move = games.alphabeta_singleplayer(agent.GameAgent(board), board, depthLimit)
@@ -123,6 +124,7 @@ def runGame(search, board, depthLimit):
     metrics.agentScore = board.score
     metrics.agentMoveList = movesList
     gui.finalAgentBoard(board)
+    gui.compare()
     # print('Final board (', search, '):\n', board.data)
     # print('\nMoves taken:')
     # count = 1

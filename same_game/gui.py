@@ -102,7 +102,7 @@ def updateBoard(board):
     score = Text(Point(250, 475),"Score: " + str(metrics.playerScore))
     score.setStyle("bold")
     score.draw(win)
-    move = Text(Point(250, 25),"Move " + str(metrics.playerMoves))
+    move = Text(Point(250, 25),"Move #" + str(metrics.playerMoves))
     move.setStyle("bold")
     move.draw(win)
 
@@ -144,7 +144,36 @@ def squareColor(board, index):
         return "yellow"
 
 def updateAgentBoard(board):
-    return 0
+    s = board.size
+    r = []
+    for i in range(s):
+        for ii in range(s):
+            r.append(Rectangle(Point(50 + ((400 / s) * ii), 50 + ((400 / s) * i)),
+                               Point(50 + ((400 / s) * (ii + 1)), 50 + ((400 / s) * (i + 1)))))
+    index = 0
+    score = Text(Point(250, 34), "Agent Score: " + str(metrics.agentScore))
+    score.setStyle("bold")
+    score.draw(win)
+    move = Text(Point(250, 17), "Agent Move #" + str(metrics.agentMoves))
+    move.setStyle("bold")
+    move.draw(win)
+    prompt = Text(Point(250, 475), "Click anywhere to continue to the next move...")
+    prompt.setStyle("italic")
+    prompt.setSize(18)
+    prompt.draw(win)
+
+    for i in r:
+        i.setOutline("black")
+        i.setWidth(2)
+        i.setFill(squareColor(board, index))
+        i.draw(win)
+        index += 1
+    win.getMouse()
+    for i in r:
+        i.undraw()
+    move.undraw()
+    score.undraw()
+    prompt.undraw()
 
 def finalBoard(board):
     s = board.size
@@ -158,7 +187,7 @@ def finalBoard(board):
     prompt.setSize(20)
     prompt.setStyle("italic")
     prompt.draw(win)
-    move = Text(Point(250, 25), "You scored " + str(metrics.playerScore) + " in " + str(metrics.playerMoves) + " moves!")
+    move = Text(Point(250, 25), "You scored " + str(metrics.playerScore) + " in " + str(metrics.playerMoves-1) + " moves!")
     move.setStyle("bold")
     move.setSize(20)
     move.draw(win)
@@ -181,7 +210,39 @@ def finalBoard(board):
     move.undraw()
 
 def finalAgentBoard(board):
-    return 0
+    s = board.size
+    r = []
+    for i in range(s):
+        for ii in range(s):
+            r.append(Rectangle(Point(50 + ((400 / s) * ii), 50 + ((400 / s) * i)),
+                               Point(50 + ((400 / s) * (ii + 1)), 50 + ((400 / s) * (i + 1)))))
+    index = 0
+    prompt = Text(Point(250, 475), "Click anywhere to continue...")
+    prompt.setSize(20)
+    prompt.setStyle("italic")
+    prompt.draw(win)
+    move = Text(Point(250, 25),
+                "Agent scored " + str(metrics.agentScore) + " in " + str(metrics.agentMoves-1) + " moves.")
+    move.setStyle("bold")
+    move.setSize(20)
+    move.draw(win)
+    for i in r:
+        i.setOutline("black")
+        i.setWidth(2)
+        i.setFill(squareColor(board, index))
+        i.draw(win)
+        index += 1
+    prompt2 = Text(Point(250, 250), "END")
+    prompt2.setStyle("bold")
+    prompt2.setTextColor("grey")
+    prompt2.setSize(36)
+    prompt2.draw(win)
+    win.getMouse()
+    for i in r:
+        i.undraw()
+    prompt.undraw()
+    prompt2.undraw()
+    move.undraw()
 
 def difficulty():
     prompt = Text(Point(250, 220),
@@ -223,6 +284,28 @@ def difficulty():
         return 2
     elif index == 2:
         return 3
+
+def compare():
+    if metrics.playerScore > metrics.agentScore:
+        result = Text(Point(250, 200), "You beat the agent by " + str(metrics.playerScore) + ":" + str(metrics.agentScore) + "!")
+        result.setStyle("bold")
+        result.setSize(20)
+    elif metrics.playerScore < metrics.agentScore:
+        result = Text(Point(250, 200), "You lost to the agent by " + str(metrics.playerScore) + ":" + str(metrics.agentScore) + "!")
+        result.setStyle("bold")
+        result.setSize(20)
+    elif metrics.playerScore == metrics.agentScore:
+        result = Text(Point(250, 200), "You tied with the agent by " + str(metrics.playerScore) + ":" + str(metrics.agentScore) + "!")
+        result.setStyle("bold")
+        result.setSize(20)
+    n = Text(Point(250, 320), "Click anywhere to restart...")
+    n.setSize(20)
+    n.setStyle("italic")
+    result.draw(win)
+    n.draw(win)
+    win.getMouse()
+    result.undraw()
+    n.undraw()
 
 def results():
     return 0
