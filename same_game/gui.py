@@ -1,7 +1,7 @@
 from graphics import *
 from same_game import metrics
 
-win = GraphWin("Same Game", 500, 500)
+win = GraphWin("Same Game", 500, 500, autoflush=False)
 name = ''
 
 def waitTillClick(p1, p2):
@@ -39,6 +39,7 @@ def getName():
     goTxt.setStyle("bold")
     go.draw(win)
     goTxt.draw(win)
+    update()
     waitTillClick(go1, go2)
     name = inputBox.getText()
     go.undraw()
@@ -73,6 +74,7 @@ def getSize():
     go3Txt.setStyle("bold")
     go3.draw(win)
     go3Txt.draw(win)
+    update()
     index = waitTillClickSections([go0, go1, go2, go3])
     go0.undraw()
     go0Txt.undraw()
@@ -105,7 +107,7 @@ def updateBoard(board):
     move = Text(Point(250, 25),"Move #" + str(metrics.playerMoves))
     move.setStyle("bold")
     move.draw(win)
-
+    update()
     for i in r:
         i.setOutline("black")
         i.setWidth(2)
@@ -161,7 +163,7 @@ def updateAgentBoard(board):
     prompt.setStyle("italic")
     prompt.setSize(18)
     prompt.draw(win)
-
+    update()
     for i in r:
         i.setOutline("black")
         i.setWidth(2)
@@ -202,6 +204,7 @@ def finalBoard(board):
     prompt2.setTextColor("grey")
     prompt2.setSize(36)
     prompt2.draw(win)
+    update()
     win.getMouse()
     for i in r:
         i.undraw()
@@ -237,6 +240,7 @@ def finalAgentBoard(board):
     prompt2.setTextColor("grey")
     prompt2.setSize(36)
     prompt2.draw(win)
+    update()
     win.getMouse()
     for i in r:
         i.undraw()
@@ -269,6 +273,7 @@ def difficulty():
     go3Txt.setStyle("bold")
     go3.draw(win)
     go3Txt.draw(win)
+    update()
     index = waitTillClickSections([go1, go2, go3])
     go1.undraw()
     go1Txt.undraw()
@@ -303,6 +308,7 @@ def compare():
     n.setStyle("italic")
     result.draw(win)
     n.draw(win)
+    update()
     win.getMouse()
     result.undraw()
     n.undraw()
@@ -326,7 +332,7 @@ def intro():
     points.draw(win)
     points2.draw(win)
     n.draw(win)
-
+    update()
     win.getMouse()
     hello.undraw()
     goal.undraw()

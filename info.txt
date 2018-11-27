@@ -5,18 +5,12 @@ James Bertrand
 Robert Coomber
 
 
-Naming conventions:
-
-lowercase with underscores
-ex: same_game.py
-
-
 VM Library Requirements:
 
 numpy
 utils
 grid
-graphics.py
+graphics.py (make sure it is the graphics.py library not the graphics library)
 
 
 Current State of Project:
