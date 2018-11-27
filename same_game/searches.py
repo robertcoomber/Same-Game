@@ -1,9 +1,12 @@
 """
     The general template for all implemented search algorithms.
 """
-
-import utils
-import grid
+from same_game.utils import (
+    is_in, argmin, argmax, argmax_random_tie, probability,
+    weighted_sample_with_replacement, memoize, print_table, DataFile, Stack,
+    FIFOQueue, PriorityQueue, name, PriorityNodeQueue
+)
+from same_game.grid import distance
 
 from collections import defaultdict
 import math
@@ -93,7 +96,7 @@ class Node:
         return "<Node %s>" % (self.state,)
 
     def __lt__(self, node):
-        return self.state < node.state
+        return self.state.score < node.state.score
 
     def expand(self, problem):
         "List the nodes reachable in one step from this node."
@@ -212,6 +215,45 @@ def depth_first_graph_search(problem):
     return graph_search(problem, Stack())
 
 
+def greedy_tree_search_score(problem):
+    "Search the nodes with the highest resulting score."
+    node = Node(problem.initial)
+    frontier = PriorityNodeQueue(max, lambda x: x.state.score)
+    frontier.append(node)
+    while frontier:
+        node = frontier.pop()
+        if problem.goal_test(node.state):
+            return node
+        frontier.extend(node.expand(problem))
+    return None
+
+
+def greedy_tree_search_move(problem):
+    "Search the nodes with the highest color value first."
+    node = Node(problem.initial)
+    frontier = PriorityNodeQueue(min, lambda x: 0 if node.action is None else (x.state.data[node.action[0][0], node.action[0][1]]))
+    frontier.append(node)
+    while frontier:
+        node = frontier.pop()
+        if problem.goal_test(node.state):
+            return node
+        frontier.extend(node.expand(problem))
+    return None
+
+def greedy_tree_search_score_plus_tilesRemaining(problem):
+    """Search the nodes with the highest current score plus the number of remaining tiles, valued similarly to
+    the removal scoring function."""
+    node = Node(problem.initial)
+    frontier = PriorityNodeQueue(max, lambda x: x.state.score + ((x.state.remainingTiles() - 1) ** 2))
+    frontier.append(node)
+    while frontier:
+        node = frontier.pop()
+        if problem.goal_test(node.state):
+            return node
+        frontier.extend(node.expand(problem))
+    return None
+
+
 def breadth_first_search(problem):
     "[Figure 3.11]"
     node = Node(problem.initial)
@@ -295,6 +337,19 @@ def iterative_deepening_search(problem):
         if result != 'cutoff':
             return result
 
+
+def flounder(problem, giveup=10000):
+    'The worst way to solve a problem'
+    node = Node(problem.initial)
+    count = 0
+    while not problem.goal_test(node.state):
+        count += 1
+        if count >= giveup:
+            return None
+        children = node.expand(problem)
+        node = random.choice(children)
+    return node
+
 # ______________________________________________________________________________
 # Informed (Heuristic) Search
 
@@ -344,3 +399,44 @@ def recursive_best_first_search(problem, h=None):
     result, bestf = RBFS(problem, node, infinity)
     return result
 
+# ______________________________________________________________________________
+
+# Code to compare searchers on various problems.
+
+
+class InstrumentedProblem(Problem):
+
+    """Delegates to a problem, and keeps statistics."""
+
+    def __init__(self, problem):
+        self.problem = problem
+        self.succs = self.goal_tests = self.states = 0
+        self.found = None
+
+    def actions(self, state):
+        self.succs += 1
+        return self.problem.actions(state)
+
+    def result(self, state, action):
+        self.states += 1
+        return self.problem.result(state, action)
+
+    def goal_test(self, state):
+        self.goal_tests += 1
+        result = self.problem.goal_test(state)
+        if result:
+            self.found = state
+        return result
+
+    def path_cost(self, c, state1, action, state2):
+        return self.problem.path_cost(c, state1, action, state2)
+
+    def value(self, state):
+        return self.problem.value(state)
+
+    def __getattr__(self, attr):
+        return getattr(self.problem, attr)
+
+    def __repr__(self):
+        return '<%4d/%4d/%4d/%s>' % (self.succs, self.goal_tests,
+                                     self.states, str(self.found)[:4])
